@@ -1,4 +1,4 @@
-module PTY-QoL
+module PTYQoL
 
 import Base: //
 

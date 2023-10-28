@@ -1,4 +1,4 @@
-name = "PTY-QoL"
+name = "PTYQoL"
 uuid = "551ad714-b11a-4605-8871-12721def4e72"
 authors = ["Tianyi Pu <912396513@qq.com> and contributors"]
 version = "0.0.1"

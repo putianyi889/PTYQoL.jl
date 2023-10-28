@@ -1,4 +1,4 @@
-using PTY-QoL
+using PTYQoL
 using Test
 
 @testset "//" begin
