@@ -1,5 +1,7 @@
 module PTY-QoL
 
-# Write your package code here.
+import Base: //
+
+//(x, y) = x / y
 
 end
