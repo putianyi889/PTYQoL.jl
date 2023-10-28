@@ -1,0 +1,13 @@
+name = "PTY-QoL"
+uuid = "551ad714-b11a-4605-8871-12721def4e72"
+authors = ["Tianyi Pu <912396513@qq.com> and contributors"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
