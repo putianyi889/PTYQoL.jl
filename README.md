@@ -1,4 +1,4 @@
-# PTY-QoL
+# PTY-QoL (PTY's Quality of Life package)
 
 [![Build Status](https://github.com/putianyi889/PTY-QoL.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/putianyi889/PTY-QoL.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 
