@@ -5,11 +5,9 @@ version = "0.1.0"
 
 [weakdeps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
-ApproxFunBase = "fbd15aa5-315a-5a7d-a8a4-24992e37be05"
 
 [extensions]
 PTYQoLLinearAlgebraExt = "LinearAlgebra"
-PTYQoLApproxFunBaseExt = "ApproxFunBase"
 
 [compat]
 julia = "1"
