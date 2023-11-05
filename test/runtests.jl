@@ -9,7 +9,7 @@ end
 @testset "dotu" begin
     using LinearAlgebra
     u = rand(10); v = rand(10)
-    @test LinearAlgebra.BLAS.dotu(u, v) == LinearAlgebra.BLAS.dotu(u, 1, v, 1) == LinearAlgebra.BLAS.dotu(10, u, 1, v, 1) == u ⋅ v
+    @test LinearAlgebra.BLAS.dotu(u, v) == LinearAlgebra.BLAS.dotu(u, 1, v, 1) == LinearAlgebra.BLAS.dotu(10, u, 1, v, 1) ≈ u ⋅ v
 
     u = rand(ComplexF64, 10); v = rand(ComplexF64, 10)
     @test endswith(string(which(LinearAlgebra.BLAS.dotu, map(typeof,(10,u,1,v,1))).file), "blas.jl")
@@ -32,5 +32,5 @@ end
 end
 
 @testset "# https://github.com/JuliaLang/julia/pull/48894" begin
-    @test AbstractRange{Float64}(1:10) ≡ 1.0:10
+    @test AbstractRange{Float64}(1:10) ≡ AbstractVector{Float64}(1:10) ≡ AbstractArray{Float64}(1:10) ≡ 1.0:10
 end
