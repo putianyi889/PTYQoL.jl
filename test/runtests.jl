@@ -26,7 +26,11 @@ end
     @test front(1:10) == 1:9 == tail(0:9)
 end
 
-@testset "startswith endswith" begin
+@testset "https://github.com/JuliaLang/julia/issues/35033" begin
     @test startswith(AbstractArray, "Abstract")
     @test endswith(AbstractArray, Array)
+end
+
+@testset "# https://github.com/JuliaLang/julia/pull/48894" begin
+    @test AbstractRange{Float64}(1:10) ≡ 1.0:10
 end

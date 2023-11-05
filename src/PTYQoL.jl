@@ -17,6 +17,13 @@ import Base: startswith, endswith
 startswith(a, b) = startswith(string(a), string(b))
 endswith(a, b) = endswith(string(a), string(b))
 
+# https://github.com/JuliaLang/julia/pull/48894
+import Base: AbstractRange, AbstractArray
+AbstractRange{T}(r::AbstractRange) where T<:Real = T(first(r)):T(step(r)):T(last(r))
+AbstractArray{T,1}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
+AbstractArray{T}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
+AbstractRange{T}(r::AbstractUnitRange) where {T<:Integer} = AbstractUnitRange{T}(r)
+
 include("Utils.jl")
 
 end
