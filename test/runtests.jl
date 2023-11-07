@@ -31,6 +31,6 @@ end
     @test endswith(AbstractArray, Array)
 end
 
-@testset "# https://github.com/JuliaLang/julia/pull/48894" begin
+@testset "https://github.com/JuliaLang/julia/pull/48894" begin
     @test AbstractRange{Float64}(1:10) ≡ AbstractVector{Float64}(1:10) ≡ AbstractArray{Float64}(1:10) ≡ 1.0:10
 end

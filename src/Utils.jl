@@ -1,5 +1,11 @@
 import Base: front
 export seealso
+
+docref(s) = "[`$(string(s))`](@ref)"
+
+langenum(s) = s
+langenum(s, t) = s * " and " * t
+langenum(s, t...) = s * ", " *langenum(t...)
 """
     seealso(s...)
 
@@ -17,9 +23,3 @@ julia> seealso(sin, cos, tan)
 ```
 """
 seealso(s...) = "See also " * langenum(map(docref, s)...) * "."
-
-docref(s) = "[`$(string(s))`](@ref)"
-
-langenum(s) = s
-langenum(s, t) = s * " and " * t
-langenum(s, t...) = s * ", " *langenum(t...)
