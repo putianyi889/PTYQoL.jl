@@ -1,5 +1,5 @@
 using PTYQoL
-using Test
+using Test, Documenter
 
 @testset "//" begin
     @test 1 // 2 isa Rational
@@ -31,6 +31,11 @@ end
     @test endswith(AbstractArray, Array)
 end
 
-@testset "# https://github.com/JuliaLang/julia/pull/48894" begin
+@testset "https://github.com/JuliaLang/julia/pull/48894" begin
     @test AbstractRange{Float64}(1:10) ≡ AbstractVector{Float64}(1:10) ≡ AbstractArray{Float64}(1:10) ≡ 1.0:10
+end
+
+DocMeta.setdocmeta!(PTYQoL, :DocTestSetup, :(using PTYQoL); recursive=true)
+@testset "Docs" begin
+	doctest(PTYQoL)
 end
