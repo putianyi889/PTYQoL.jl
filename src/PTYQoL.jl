@@ -24,6 +24,20 @@ AbstractArray{T,1}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
 AbstractArray{T}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
 AbstractRange{T}(r::AbstractUnitRange) where {T<:Integer} = AbstractUnitRange{T}(r)
 
+import Base: Fix2, Fix1
+for Fun in (Fix1, Fix2)
+    @eval begin
+        ∘(f::$Fun{::typeof(+)}, g::$Fun{::typeof(+)}) = $Fun(+, f.x+g.x)
+        ∘(f::$Fun{::typeof(*)}, g::$Fun{::typeof(*)}) = $Fun(*, f.x*g.x)
+        ^(f::$Fun{::typeof(+)}, p) = $Fun(+, f.x*p)
+        ^(f::$Fun{::typeof(*)}, p) = $Fun(*, f.x^p)
+    end
+end
+
+import Base: ==
+==(f::Function, ::typeof(identity)) = isone(f)
+==(::typeof(identity), f::Function) = isone(f)
+
 include("Utils.jl")
 
 end
