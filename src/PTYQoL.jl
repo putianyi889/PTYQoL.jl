@@ -24,13 +24,15 @@ AbstractArray{T,1}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
 AbstractArray{T}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
 AbstractRange{T}(r::AbstractUnitRange) where {T<:Integer} = AbstractUnitRange{T}(r)
 
-import Base: Fix2, Fix1
+import Base: Fix2, Fix1, isone, ^, ∘
 for Fun in (Fix1, Fix2)
     @eval begin
-        ∘(f::$Fun{::typeof(+)}, g::$Fun{::typeof(+)}) = $Fun(+, f.x+g.x)
-        ∘(f::$Fun{::typeof(*)}, g::$Fun{::typeof(*)}) = $Fun(*, f.x*g.x)
-        ^(f::$Fun{::typeof(+)}, p) = $Fun(+, f.x*p)
-        ^(f::$Fun{::typeof(*)}, p) = $Fun(*, f.x^p)
+        ∘(f::$Fun{typeof(+)}, g::$Fun{typeof(+)}) = $Fun(+, f.x+g.x)
+        ∘(f::$Fun{typeof(*)}, g::$Fun{typeof(*)}) = $Fun(*, f.x*g.x)
+        ^(f::$Fun{typeof(+)}, p) = $Fun(+, f.x*p)
+        ^(f::$Fun{typeof(*)}, p) = $Fun(*, f.x^p)
+        isone(f::$Fun{typeof(+)}) = iszero(f.x)
+        isone(f::$Fun{typeof(*)}) = isone(f.x)
     end
 end
 
