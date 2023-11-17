@@ -25,6 +25,7 @@ AbstractArray{T}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
 AbstractRange{T}(r::AbstractUnitRange) where {T<:Integer} = AbstractUnitRange{T}(r)
 
 import Base: Fix2, Fix1, isone, ^, ∘
+# problematic in terms of type consistency, but these are not supported by Base at all.
 for Fun in (Fix1, Fix2)
     @eval begin
         ∘(f::$Fun{typeof(+)}, g::$Fun{typeof(+)}) = $Fun(+, f.x+g.x)
@@ -35,6 +36,7 @@ for Fun in (Fix1, Fix2)
         isone(f::$Fun{typeof(*)}) = isone(f.x)
     end
 end
+∘(f::Fix2{typeof(^)}, g::Fix2{typeof(^)}) = Fix2(^, g.x*f.x)
 
 import Base: ==
 ==(f::Function, ::typeof(identity)) = isone(f)
