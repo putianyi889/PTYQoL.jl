@@ -35,6 +35,21 @@ end
     @test AbstractRange{Float64}(1:10) ≡ AbstractVector{Float64}(1:10) ≡ AbstractArray{Float64}(1:10) ≡ 1.0:10
 end
 
+@testset "Function interface" begin
+    using Base: Fix2
+    @test identity ∘ identity ≡ identity ≡ exp10 ∘ log10 ≡ log2 ∘ exp2 ≡ inv(identity)
+    @test identity ∘ exp ≡ exp ≡ exp ∘ identity
+    @test abs ∘ abs ≡ abs
+    @test inv(exp10 ∘ exp2) ≡ log2 ∘ log10
+    @test Fix2(+, 0) == identity == Fix2(*, 1)
+
+    @test Fix2(+, 1) ∘ Fix2(+, 2) == Fix2(+, 3)
+    @test Fix2(*, 2) ∘ Fix2(*, 3) == Fix2(*, 6)
+    @test Fix2(+, 3) ^ 5 == Fix2(+, 15)
+    @test Fix2(*, 4) ^ 3 == Fix2(*, 64)
+    @test Fix2(^, 2) ∘ Fix2(^, 3) == Fix2(^, 6)
+end
+
 DocMeta.setdocmeta!(PTYQoL, :DocTestSetup, :(using PTYQoL); recursive=true)
 @testset "Docs" begin
 	doctest(PTYQoL)
