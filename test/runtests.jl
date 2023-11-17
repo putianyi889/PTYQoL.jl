@@ -37,7 +37,7 @@ end
 
 @testset "Function interface" begin
     using Base: Fix2
-    @test identity ∘ identity ≡ identity ≡ exp10 ∘ log10 ≡ log2 ∘ exp2 ≡ inv(identity)
+    @test identity ∘ identity ≡ identity ≡ exp10 ∘ inv(exp10) ≡ log2 ∘ inv(log2) ≡ inv(identity)
     @test identity ∘ exp ≡ exp ≡ exp ∘ identity
     @test abs ∘ abs ≡ abs
     @test inv(exp10 ∘ exp2) ≡ log2 ∘ log10
