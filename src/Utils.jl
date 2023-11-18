@@ -31,6 +31,33 @@ The same as `fieldnames`, but is `@generated` so is fast.
 """
 @generated fields(::Type{T}) where T = fieldnames(T)
 
+"""
+    @struct_equal(TYP)
+
+Generate `Base.==` for comparing structs of type `TYP`.
+
+# Example
+```jldoctest
+julia> struct Foo
+       a
+       b
+       end
+
+julia> x = Foo(1,1)
+Foo(1, 1)
+
+julia> y = Foo(1.0,1.0)
+Foo(1.0, 1.0)
+
+julia> x==y
+false
+
+julia> @struct_equal Foo;
+
+julia> x==y
+true
+```
+"""
 macro struct_equal(TYP)
     esc(quote
         import Base: ==
@@ -51,7 +78,7 @@ end
 
 Define the function(s) of the type `TYP` by applying the function(s) to each field and generate a new `TYP` with the values. The generated function(s) are somehow faster than the naive implementation.
 
-# Examples
+# Example
 ```jldoctest
 julia> struct Foo
        a
