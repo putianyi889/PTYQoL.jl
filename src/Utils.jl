@@ -54,9 +54,9 @@ Define the function(s) of the type `TYP` by applying the function(s) to each fie
 # Examples
 ```jldoctest
 julia> struct Foo
-a
-b
-end
+       a
+       b
+       end
 
 julia> x = Foo(1,1)
 Foo(1, 1)
