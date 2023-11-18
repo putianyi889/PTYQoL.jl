@@ -1,5 +1,5 @@
 import Base: front
-export seealso
+export seealso, fields, @struct_equal, @struct_map
 
 docref(s) = "[`$(string(s))`](@ref)"
 
@@ -23,3 +23,61 @@ julia> seealso(sin, cos, tan)
 ```
 """
 seealso(s...) = "See also " * langenum(map(docref, s)...) * "."
+
+"""
+    @generated fields(::Type{T}) where T = fieldnames(T)
+
+The same as `fieldnames`, but is `@generated` so is fast.
+"""
+@generated fields(::Type{T}) where T = fieldnames(T)
+
+macro struct_equal(TYP)
+    esc(quote
+        import Base: ==
+        function ==(A::T1, B::T2) where {T1<:$TYP, T2<:$TYP}
+            for p in fields($TYP)
+                if getfield(A, p) != getfield(B, p)
+                    return false
+                end
+            end
+            return true
+        end
+    end)
+end
+
+"""
+    @struct_map(TYP, op)
+    @struct_map(TYP, ops...)
+
+Define the function(s) of the type `TYP` by applying the function(s) to each field and generate a new `TYP` with the values. The generated function(s) are somehow faster than the naive implementation.
+
+# Examples
+```jldoctest
+julia> struct Foo
+a
+b
+end
+
+julia> x = Foo(1,1)
+Foo(1, 1)
+
+julia> @struct_map(Foo, Base.exp, Base.sin, Base.:+)
+
+julia> exp(x), sin(x), x+x
+(Foo(2.718281828459045, 2.718281828459045), Foo(0.8414709848078965, 0.8414709848078965), Foo(2, 2))
+```
+"""
+macro struct_map(TYP, op)
+    esc(quote
+        function $op(A::$TYP...)
+            $TYP(($op(getfield.(A, p)...) for p in fields($TYP))...)
+        end
+    end)
+end
+
+macro struct_map(TYP, ops...)
+    esc(quote
+        @struct_map($TYP, $(Base.first(ops)))
+        @struct_map($TYP, $(Base.tail(ops)...))
+    end)
+end
