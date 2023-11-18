@@ -50,6 +50,10 @@ end
     @test Fix2(^, 2) ∘ Fix2(^, 3) == Fix2(^, 6)
 end
 
+@testset "ln" begin
+    @test ln(1) == 0 # just for coverage
+end
+
 DocMeta.setdocmeta!(PTYQoL, :DocTestSetup, :(using PTYQoL); recursive=true)
 @testset "Docs" begin
 	doctest(PTYQoL)

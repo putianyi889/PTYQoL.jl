@@ -1,5 +1,7 @@
 module PTYQoL
 
+include("Utils.jl")
+
 import Base: //
 //(x, y) = x / y
 
@@ -23,9 +25,6 @@ AbstractRange{T}(r::AbstractRange) where T<:Real = T(first(r)):T(step(r)):T(last
 AbstractArray{T,1}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
 AbstractArray{T}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
 AbstractRange{T}(r::AbstractUnitRange) where {T<:Integer} = AbstractUnitRange{T}(r)
-
-export ln
-ln(x::Real) = log(x)
 
 import Base: Fix2, Fix1, isone, ^, ∘, inv
 # problematic in terms of type consistency, but these are not supported by Base at all.
@@ -58,7 +57,5 @@ inv(f::ComposedFunction) = inv(f.inner) ∘ inv(f.outer)
 import Base: ==
 ==(f::Function, ::typeof(identity)) = isone(f)
 ==(::typeof(identity), f::Function) = isone(f)
-
-include("Utils.jl")
 
 end

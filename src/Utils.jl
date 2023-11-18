@@ -108,3 +108,11 @@ macro struct_map(TYP, ops...)
         @struct_map($TYP, $(Base.tail(ops)...))
     end)
 end
+
+export ln
+"""
+    ln(x) = log(x)
+
+The same as `log` but only accepts one argument.
+"""
+ln(x::Number) = log(x)
