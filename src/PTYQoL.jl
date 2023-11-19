@@ -1,5 +1,7 @@
 module PTYQoL
 
+include("Utils.jl")
+
 import Base: //
 //(x, y) = x / y
 
@@ -24,6 +26,36 @@ AbstractArray{T,1}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
 AbstractArray{T}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
 AbstractRange{T}(r::AbstractUnitRange) where {T<:Integer} = AbstractUnitRange{T}(r)
 
-include("Utils.jl")
+import Base: Fix2, Fix1, isone, ^, ∘, inv
+# problematic in terms of type consistency, but these are not supported by Base at all.
+for Fun in (Fix1, Fix2)
+    @eval begin
+        ∘(f::$Fun{typeof(+)}, g::$Fun{typeof(+)}) = $Fun(+, f.x+g.x)
+        ∘(f::$Fun{typeof(*)}, g::$Fun{typeof(*)}) = $Fun(*, f.x*g.x)
+        ^(f::$Fun{typeof(+)}, p) = $Fun(+, f.x*p)
+        ^(f::$Fun{typeof(*)}, p) = $Fun(*, f.x^p)
+        isone(f::$Fun{typeof(+)}) = iszero(f.x)
+        isone(f::$Fun{typeof(*)}) = isone(f.x)
+    end
+end
+∘(f::Fix2{typeof(^)}, g::Fix2{typeof(^)}) = Fix2(^, g.x*f.x)
+∘(::typeof(abs), ::typeof(abs)) = abs
+∘(::typeof(identity), f::Function) = f
+∘(f::Function, ::typeof(identity)) = f
+∘(::typeof(identity), ::typeof(identity)) = identity
+inv(::typeof(identity)) = identity
+for (op, invop) in ((exp, ln), (exp10, log10), (exp2, log2))
+    @eval begin
+        inv(::typeof($op)) = $invop
+        inv(::typeof($invop)) = $op
+        ∘(::typeof($op), ::typeof($invop)) = identity
+        ∘(::typeof($invop), ::typeof($op)) = identity
+    end
+end
+inv(f::ComposedFunction) = inv(f.inner) ∘ inv(f.outer)
+
+import Base: ==
+==(f::Function, ::typeof(identity)) = isone(f)
+==(::typeof(identity), f::Function) = isone(f)
 
 end

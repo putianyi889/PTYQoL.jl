@@ -1,7 +1,7 @@
 name = "PTYQoL"
 uuid = "551ad714-b11a-4605-8871-12721def4e72"
 authors = ["Tianyi Pu <912396513@qq.com> and contributors"]
-version = "0.1.1"
+version = "0.1.2"
 
 [weakdeps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
@@ -13,9 +13,9 @@ PTYQoLLinearAlgebraExt = "LinearAlgebra"
 julia = "1"
 
 [extras]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 
 [targets]
 test = ["Test", "LinearAlgebra", "Documenter"]
