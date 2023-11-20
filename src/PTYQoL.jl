@@ -58,4 +58,8 @@ import Base: ==
 ==(f::Function, ::typeof(identity)) = isone(f)
 ==(::typeof(identity), f::Function) = isone(f)
 
+import Base: convert
+convert(::Type{BigFloat}, x; precision = precision(BigFloat)) = BigFloat(x, precision = precision)
+convert(T, x; precision) = convert(T, x)
+
 end
