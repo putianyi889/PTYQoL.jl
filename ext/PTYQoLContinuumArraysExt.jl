@@ -1,6 +1,6 @@
 module PTYQoLContinuumArraysExt
 
-import Base: union, Fix2
+import Base: union, Fix2, isempty
 import ContinuumArrays: AbstractInterval, BroadcastQuasiVector, Interval, Inclusion, endpoints, isleftclosed, isrightclosed
 
 function union(x::BroadcastQuasiVector{T, <:Fix2{typeof(^), <:Number}, <:Tuple{Inclusion{T, <:AbstractInterval}}}) where T
@@ -26,5 +26,7 @@ function union(x::BroadcastQuasiVector{T, <:Fix2{typeof(^), <:Number}, <:Tuple{I
         end
     end            
 end
+
+isempty(a::Inclusion) = isempty(a.domain)
 
 end
