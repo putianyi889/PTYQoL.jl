@@ -61,7 +61,8 @@ end
     end
     @testset "QuasiArrays" begin
         using ContinuumArrays
-        @test union((Inclusion(0..1)).^2) == Inclusion(0..1)
+        @test union(Inclusion(0..1).^2) == Inclusion(0..1) == union(Inclusion(-1..1).^1.0) == union(Inclusion(1..Inf).^(-0.5))
+        @test isempty(Inclusion(-1..0).^1.5)
     end
 end
 
