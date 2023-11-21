@@ -54,6 +54,11 @@ end
     @test ln(1) == 0 # just for coverage
 end
 
+@testset "IntervalSets" begin
+    using DomainSets
+    @test union(ChebyshevInterval()) ≡ ChebyshevInterval()
+end
+
 DocMeta.setdocmeta!(PTYQoL, :DocTestSetup, :(using PTYQoL); recursive=true)
 @testset "Docs" begin
 	doctest(PTYQoL)
