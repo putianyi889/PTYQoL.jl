@@ -54,9 +54,15 @@ end
     @test ln(1) == 0 # just for coverage
 end
 
-@testset "IntervalSets" begin
-    using DomainSets
-    @test union(ChebyshevInterval()) ≡ ChebyshevInterval()
+@testset "Extensions" begin
+    @testset "IntervalSets" begin
+        using DomainSets
+        @test union(ChebyshevInterval()) ≡ ChebyshevInterval()
+    end
+    @testset "QuasiArrays" begin
+        using ContinuumArrays
+        @test union((Inclusion(0..1)).^2) == Inclusion(0..1)
+    end
 end
 
 DocMeta.setdocmeta!(PTYQoL, :DocTestSetup, :(using PTYQoL); recursive=true)
