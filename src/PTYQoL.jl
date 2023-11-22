@@ -58,4 +58,7 @@ import Base: ==
 ==(f::Function, ::typeof(identity)) = isone(f)
 ==(::typeof(identity), f::Function) = isone(f)
 
+import Base: getproperty, Fix2
+getproperty(x) = Fix2(getproperty, x)
+
 end
