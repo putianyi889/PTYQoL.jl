@@ -64,6 +64,11 @@ end
         @test union(Inclusion(0..1).^2) == Inclusion(0..1) == union(Inclusion(-1..1).^1.0) == union(Inclusion(1..Inf).^(-0.5))
         @test isempty(union(Inclusion(-1..0).^1.5))
     end
+    @testset "ClassicalOrthogonalPolynomials" begin
+        using ClassicalOrthogonalPolynomials
+        using ClassicalOrthogonalPolynomials: AbstractJacobi
+        @test AbstractJacobi{Float32}(Jacobi(1,1)) isa Jacobi{Float32}
+    end
 end
 
 DocMeta.setdocmeta!(PTYQoL, :DocTestSetup, :(using PTYQoL); recursive=true)
