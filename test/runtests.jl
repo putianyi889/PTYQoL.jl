@@ -54,6 +54,12 @@ end
     @test ln(1) == 0 # just for coverage
 end
 
+@testset "precision_convert" begin
+    setprecision(256)
+    x = precision_convert(BigFloat, BigFloat(1), 128)
+    @test precision(x) == 128
+end
+
 @testset "Extensions" begin
     @testset "IntervalSets" begin
         using DomainSets
@@ -63,6 +69,7 @@ end
         using ContinuumArrays
         @test union(Inclusion(0..1).^2) == Inclusion(0..1) == union(Inclusion(-1..1).^1.0) == union(Inclusion(1..Inf).^(-0.5))
         @test isempty(union(Inclusion(-1..0).^1.5))
+        @test union(Inclusion(0..1).^0) == Inclusion(1..1)
     end
     @testset "ClassicalOrthogonalPolynomials" begin
         using ClassicalOrthogonalPolynomials

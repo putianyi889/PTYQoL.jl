@@ -116,3 +116,7 @@ export ln
 The same as `log` but only accepts one argument.
 """
 ln(x::Number) = log(x)
+
+export precision_convert
+precision_convert(::Type{BigFloat}, x, precision) = BigFloat(x, precision = precision)
+precision_convert(T, x, precision) = convert(T, x)
