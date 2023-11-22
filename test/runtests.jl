@@ -68,6 +68,9 @@ end
         using ClassicalOrthogonalPolynomials
         using ClassicalOrthogonalPolynomials: AbstractJacobi
         @test AbstractJacobi{Float32}(Jacobi(1,1)) isa Jacobi{Float32}
+        @test AbstractJacobi{Float16}(ChebyshevU()) isa ChebyshevU{Float16}
+        @test AbstractJacobi{BigFloat}(Legendre()) isa Legendre{BigFloat}
+        @test AbstractJacobi{Float32}(Ultraspherical(2)) isa Ultraspherical{Float32}
     end
 end
 
