@@ -10,6 +10,7 @@ ContinuumArrays = "7ae1f121-cc2c-504b-ac30-9b923412ae5c"
 IntervalSets = "8197267c-284f-5f27-9208-e0e47529a953"
 QuasiArrays = "c4ea9172-b204-11e9-377d-29865faadc5c"
 ClassicalOrthogonalPolynomials = "b30e2e7b-c4ee-47da-9d5f-2c5c27239acd"
+InfiniteArrays = "4858937d-0d70-526a-a4dd-2d5cb5dd786c"
 
 [extensions]
 PTYQoLLinearAlgebraExt = "LinearAlgebra"
@@ -18,6 +19,7 @@ PTYQoLContinuumArraysExt = "ContinuumArrays"
 PTYQoLIntervalSetsExt = "IntervalSets"
 PTYQoLQuasiArraysExt = "QuasiArrays"
 PTYQoLClassicalOrthogonalPolynomialsExt = "ClassicalOrthogonalPolynomials"
+PTYQoLInfiniteArraysExt = "InfiniteArrays"
 
 [compat]
 julia = "1"
