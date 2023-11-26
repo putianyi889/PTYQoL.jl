@@ -3,6 +3,8 @@ module PTYQoLBandedMatricesExt
 import BandedMatrices: inbands_getindex, inbands_setindex!, AbstractBandedMatrix, bandwidths, MemoryLayout, BandedLayout
 import Base: getindex, setindex!, @propagate_inbounds
 
+MemoryLayout(::Type{<:AbstractBandedMatrix}) = BandedLayout()
+
 @propagate_inbounds function getindex(A::AbstractBandedMatrix, j::Integer, k::Integer)
     @boundscheck checkbounds(A, j, k)
     l, u = bandwidths(A)
