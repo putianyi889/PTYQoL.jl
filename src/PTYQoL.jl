@@ -61,4 +61,13 @@ import Base: ==
 import Base: getproperty, Fix2
 getproperty(x) = Fix2(getproperty, x)
 
+# https://github.com/JuliaLang/julia/pull/52312
+import Base: first, last, lastindex, front, tail, getindex
+first(A::CartesianIndex) = first(Tuple(A))
+last(A::CartesianIndex) = last(Tuple(A))
+lastindex(A::CartesianIndex) = lastindex(Tuple(A))
+front(A::CartesianIndex) = CartesianIndex(front(Tuple(A)))
+tail(A::CartesianIndex) = CartesianIndex(tail(Tuple(A)))
+getindex(A::CartesianIndex, i) = CartesianIndex(Tuple(A)[i])
+
 end
