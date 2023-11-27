@@ -5,8 +5,9 @@ include("Utils.jl")
 import Base: //
 //(x, y) = x / y
 
-import Base: eps, ceil, floor
+import Base: eps, ceil, floor, precision
 eps(::Type{Complex{T}}) where T = eps(T)
+precision(::Type{Complex{T}}) where T = precision(T)
 ceil(z::Complex; args...) = ceil(real(z), args...) + ceil(imag(z), args...)im
 floor(z::Complex; args...) = floor(real(z), args...) + floor(imag(z), args...)im
 
