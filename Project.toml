@@ -35,6 +35,8 @@ DomainSets = "5b8099bc-c8ec-5219-889f-1d9e522a28bf"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 ClassicalOrthogonalPolynomials = "b30e2e7b-c4ee-47da-9d5f-2c5c27239acd"
+InfiniteArrays = "4858937d-0d70-526a-a4dd-2d5cb5dd786c"
+ArrayLayouts = "4c555306-a7a7-4459-81d9-ec55ddd5c99a"
 
 [targets]
-test = ["Test", "LinearAlgebra", "Documenter", "DomainSets", "ContinuumArrays", "ClassicalOrthogonalPolynomials"]
+test = ["Test", "LinearAlgebra", "Documenter", "DomainSets", "ContinuumArrays", "ClassicalOrthogonalPolynomials", "InfiniteArrays", "ArrayLayouts"]
