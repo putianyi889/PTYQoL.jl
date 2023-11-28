@@ -5,8 +5,9 @@ include("Utils.jl")
 import Base: //
 //(x, y) = x / y
 
-import Base: eps, ceil, floor
+import Base: eps, ceil, floor, precision
 eps(::Type{Complex{T}}) where T = eps(T)
+precision(::Type{Complex{T}}) where T = precision(T)
 ceil(z::Complex; args...) = ceil(real(z), args...) + ceil(imag(z), args...)im
 floor(z::Complex; args...) = floor(real(z), args...) + floor(imag(z), args...)im
 
@@ -57,6 +58,7 @@ inv(f::ComposedFunction) = inv(f.inner) ∘ inv(f.outer)
 import Base: ==
 ==(f::Function, ::typeof(identity)) = isone(f)
 ==(::typeof(identity), f::Function) = isone(f)
+==(::typeof(identity), ::typeof(identity)) = true # ambiguity
 
 import Base: getproperty, Fix2
 getproperty(x) = Fix2(getproperty, x)
@@ -69,5 +71,8 @@ lastindex(A::CartesianIndex) = lastindex(Tuple(A))
 front(A::CartesianIndex) = CartesianIndex(front(Tuple(A)))
 tail(A::CartesianIndex) = CartesianIndex(tail(Tuple(A)))
 getindex(A::CartesianIndex, i) = CartesianIndex(Tuple(A)[i])
+
+import Base: copy
+copy(t::Tuple) = t
 
 end

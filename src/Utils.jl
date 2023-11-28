@@ -1,5 +1,5 @@
 import Base: front
-export seealso, fields, @struct_equal, @struct_map
+export seealso, fields, @struct_equal, @struct_copy, @struct_map
 
 docref(s) = "[`$(string(s))`](@ref)"
 
@@ -73,6 +73,38 @@ macro struct_equal(TYP)
 end
 
 """
+    @struct_copy(TYP)
+
+Generate `Base.copy` for copying structs of type `TYP`.
+
+# Example
+```jldoctest
+julia> struct Foo
+       a
+       b
+       end
+
+julia> x = Foo(1,1)
+Foo(1, 1)
+
+julia> y = copy(x)
+ERROR: MethodError: no method matching copy(::Foo)
+
+julia> @struct_copy Foo;
+
+julia> y = copy(x)
+Foo(1, 1)
+```
+"""
+macro struct_copy(TYP)
+    quote
+        function Base.copy(A::$(esc(TYP)))
+            typeof(A)((Base.copy(getfield(A, p)) for p in fields($(esc(TYP))))...)
+        end
+    end
+end
+
+"""
     @struct_map(TYP, op)
     @struct_map(TYP, ops...)
 
@@ -95,11 +127,11 @@ julia> exp(x), sin(x), x+x
 ```
 """
 macro struct_map(TYP, op)
-    esc(quote
-        function $op(A::$TYP...)
-            $TYP(($op(getfield.(A, p)...) for p in fields($TYP))...)
+    quote
+        function $(esc(op))(A::$(esc(TYP))...)
+            $(esc(TYP))(($(esc(op))(getfield.(A, p)...) for p in fields($(esc(TYP))))...)
         end
-    end)
+    end
 end
 
 macro struct_map(TYP, ops...)
