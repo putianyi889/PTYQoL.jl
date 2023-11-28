@@ -72,4 +72,7 @@ front(A::CartesianIndex) = CartesianIndex(front(Tuple(A)))
 tail(A::CartesianIndex) = CartesianIndex(tail(Tuple(A)))
 getindex(A::CartesianIndex, i) = CartesianIndex(Tuple(A)[i])
 
+import Base: copy
+copy(t::Tuple) = t
+
 end
