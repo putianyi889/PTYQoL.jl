@@ -37,8 +37,9 @@ end
         @test LinearAlgebra.BLAS.dotu(u, v) == LinearAlgebra.BLAS.dotu(u, 1, v, 1) == LinearAlgebra.BLAS.dotu(10, u, 1, v, 1)
     end
 
-    @testset "eps ceil floor" begin
+    @testset "Complex interface" begin
         @test eps(ComplexF64) == eps(Float64)
+        @test precision(ComplexF64) == precision(Float64)
         @test ceil(0.5+0.5im) == 1+1im == floor(1.5+1.5im)
     end
 
@@ -60,6 +61,10 @@ end
         @test Fix2(+, 3) ^ 5 == Fix2(+, 15)
         @test Fix2(*, 4) ^ 3 == Fix2(*, 64)
         @test Fix2(^, 2) ∘ Fix2(^, 3) == Fix2(^, 6)
+    end
+
+    @testset "Tuple copy" begin
+        @test copy((1,2)) ≡ (1,2)
     end
 end
 

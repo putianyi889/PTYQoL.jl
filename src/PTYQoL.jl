@@ -58,7 +58,7 @@ inv(f::ComposedFunction) = inv(f.inner) ∘ inv(f.outer)
 import Base: ==
 ==(f::Function, ::typeof(identity)) = isone(f)
 ==(::typeof(identity), f::Function) = isone(f)
-==(::typeof(identity), ::typeof(identity)) = true
+==(::typeof(identity), ::typeof(identity)) = true # ambiguity
 
 import Base: getproperty, Fix2
 getproperty(x) = Fix2(getproperty, x)
