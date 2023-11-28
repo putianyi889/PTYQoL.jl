@@ -1,5 +1,5 @@
 using PTYQoL
-using Test, Documenter
+using Test
 
 @testset "Pull Requests" begin
     @testset "https://github.com/JuliaLang/julia/issues/35033" begin
@@ -108,7 +108,13 @@ end
     end
 end
 
+using Documenter
 DocMeta.setdocmeta!(PTYQoL, :DocTestSetup, :(using PTYQoL); recursive=true)
 @testset "Docs" begin
 	doctest(PTYQoL)
+end
+
+using Aqua
+@testset "Project quality" begin
+    Aqua.test_all(PTYQoL, ambiguities=true, piracies=false, deps_compat=false)
 end
