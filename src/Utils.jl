@@ -34,7 +34,7 @@ The same as `fieldnames`, but is `@generated` so is fast.
 """
     @struct_equal(TYP)
 
-Generate `Base.==` for comparing structs of type `TYP`. $(seealso(@struct_copy, @struct_map))
+Generate `Base.==` for comparing structs of type `TYP`. $(seealso("@struct_copy", "@struct_map"))
 
 # Example
 ```jldoctest
@@ -75,7 +75,7 @@ end
 """
     @struct_copy(TYP)
 
-Generate `Base.copy` for copying structs of type `TYP`. $(seealso(@struct_equal, @struct_map))
+Generate `Base.copy` for copying structs of type `TYP`. $(seealso("@struct_equal", "@struct_map"))
 
 # Example
 ```jldoctest
@@ -108,7 +108,7 @@ end
     @struct_map(TYP, op)
     @struct_map(TYP, ops...)
 
-Define the function(s) of the type `TYP` by applying the function(s) to each field and generate a new `TYP` with the values. The generated function(s) are somehow faster than the naive implementation. $(seealso(@struct_equal, @struct_copy))
+Define the function(s) of the type `TYP` by applying the function(s) to each field and generate a new `TYP` with the values. The generated function(s) are somehow faster than the naive implementation. $(seealso("@struct_equal", "@struct_copy"))
 
 # Example
 ```jldoctest
