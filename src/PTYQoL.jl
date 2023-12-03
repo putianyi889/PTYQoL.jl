@@ -84,7 +84,7 @@ for op in (:+, :*, :-, :/, ://)
         $op(c::Number, f::Function) = Fix1($op, c) ∘ f
         show(io::IO, f::ComposedFunction{<:Fix1{typeof($op)}}) = print(io, '(', f.outer.x, $op, f.inner, ')')
         show(io::IO, f::ComposedFunction{<:Fix2{typeof($op)}}) = print(io, '(', f.inner, $op, f.outer.x, ')')
-        show(io::IO, f::ComposedFunction{Splat{typeof($op)}, <:NTuple{Function, Function}}) = print(io, '(', f.inner[1], $op, f.inner[2], ')')
+        show(io::IO, f::ComposedFunction{Splat{typeof($op)}, <:Tuple{Function, Function}}) = print(io, '(', f.inner[1], $op, f.inner[2], ')')
     end
 end
 show(io::IO, f::ComposedFunction{<:Fix1}) = print(io, f.outer.f, '(', f.outer.x, ',', f.inner, ')')
