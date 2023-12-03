@@ -75,4 +75,19 @@ getindex(A::CartesianIndex, i) = CartesianIndex(Tuple(A)[i])
 import Base: copy
 copy(t::Tuple) = t
 
+import Base: Fix1, Fix2, +, -, *, /, //, show, Splat
+(t::NTuple{N, Function})(x...) where N = tuple((f(x...) for f in t)...)
+for op in (:+, :*, :-, :/, ://)
+    @eval begin
+        $op(f::Function...) = ∘(splat($op), f)
+        $op(f::Function, c::Number) = Fix2($op, c) ∘ f
+        $op(c::Number, f::Function) = Fix1($op, c) ∘ f
+        show(io::IO, f::ComposedFunction{<:Fix1{typeof($op)}}) = print(io, '(', f.outer.x, $op, f.inner, ')')
+        show(io::IO, f::ComposedFunction{<:Fix2{typeof($op)}}) = print(io, '(', f.inner, $op, f.outer.x, ')')
+        show(io::IO, f::ComposedFunction{Splat{typeof($op)}, <:NTuple{Function, Function}}) = print(io, '(', f.inner[1], $op, f.inner[2], ')')
+    end
+end
+show(io::IO, f::ComposedFunction{<:Fix1}) = print(io, f.outer.f, '(', f.outer.x, ',', f.inner, ')')
+show(io::IO, f::ComposedFunction{<:Fix2}) = print(io, f.outer.f, '(', f.inner, ',', f.outer.x, ')')
+
 end
