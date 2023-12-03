@@ -61,6 +61,9 @@ end
         @test Fix2(+, 3) ^ 5 == Fix2(+, 15)
         @test Fix2(*, 4) ^ 3 == Fix2(*, 64)
         @test Fix2(^, 2) ∘ Fix2(^, 3) == Fix2(^, 6)
+
+        @test (sin+1)(1) ≈ 1+sin(1)
+        @test (2sin*cos)(1) ≈ sin(2)
     end
 
     @testset "Tuple copy" begin
