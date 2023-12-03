@@ -6,4 +6,4 @@ Want just an easy feature that Julia or some package doesn't have, while the PR 
 
 Full of type piracies. Do file an issue if this package does break other things or becomes a part of Julia/some other package.
 
-Rule of new version: an external PR is merged, or the number of line changes reach 100.
+Rule of new version: an external PR is merged, an issue is resolved, or the number of line changes reach 100.
