@@ -1,5 +1,5 @@
 import Base: front
-export seealso, fields, @struct_all, @struct_copy, @struct_map
+export seealso, fields, @struct_all, @struct_any, @struct_copy, @struct_map
 
 docref(s) = "[`$(string(s))`](@ref)"
 
@@ -35,7 +35,7 @@ The same as `fieldnames`, but is `@generated` so is fast.
     @struct_all(TYP, op)
     @struct_all(TYP, ops...)
 
-Define the binary operator of the type `TYP` by applying the operator to each field and return true only when all the results are true. $(seealso("@struct_copy", "@struct_map"))
+Define the operator of the type `TYP` by applying the operator to each field and return true only when all the results are true. $(seealso("@struct_any", "@struct_copy", "@struct_map"))
 
 # Example
 ```jldoctest
@@ -50,29 +50,27 @@ Foo(1, 1)
 julia> y = Foo(1.0,1.0)
 Foo(1.0, 1.0)
 
-julia> x==y, isequal(x,y), isapprox(x,y)
+julia> x==y, isequal(x,y)
 (false, false)
 
 julia> isapprox(x,y)
 ERROR: MethodError: no method matching isapprox(::Foo, ::Foo)
 
-julia> @struct_all Foo Base.:(==) Base.isequal Base.isapprox
+julia> isfinite(x)
+ERROR: MethodError: no method matching isfinite(::Foo)
 
-julia> x==y, isequal(x,y), isapprox(x,y)
-(true, true, true)
+julia> @struct_all Foo Base.:(==) Base.isequal Base.isapprox Base.isfinite
+
+julia> x==y, isequal(x,y), isapprox(x,y), isfinite(x)
+(true, true, true, true)
 ```
 """
 macro struct_all(TYP, op)
-    esc(quote
-        function $op(A::T1, B::T2) where {T1<:$TYP, T2<:$TYP}
-            for p in fields($TYP)
-                if !$op(getfield(A, p), getfield(B, p))
-                    return false
-                end
-            end
-            return true
+    quote
+        function $(esc(op))(A::$(esc(TYP))...)
+            Base.all($(esc(op))(getfield.(A, p)...) for p in fields($(esc(TYP))))
         end
-    end)
+    end
 end
 
 macro struct_all(TYP, ops...)
@@ -82,23 +80,53 @@ macro struct_all(TYP, ops...)
     end)
 end
 
+"""
+    @struct_any(TYP, op)
+    @struct_any(TYP, ops...)
+
+Define the binary operator of the type `TYP` by applying the operator to each field and return true when any of the results is true. $(seealso("@struct_all", "@struct_copy", "@struct_map"))
+
+# Example
+```jldoctest
+julia> struct Foo
+       a
+       b
+       end
+
+julia> x = Foo(Inf, NaN)
+Foo(Inf, NaN)
+
+julia> isinf(x)
+ERROR: MethodError: no method matching isinf(::Foo)
+
+julia> isnan(x)
+ERROR: MethodError: no method matching isnan(::Foo)
+
+julia> @struct_any Foo Base.isinf Base.isnan
+
+julia> isinf(x), isnan(x)
+(true, true)
+```
+"""
 macro struct_any(TYP, op)
-    esc(quote
-        function $op(A::T1, B::T2) where {T1<:$TYP, T2<:$TYP}
-            for p in fields($TYP)
-                if $op(getfield(A, p), getfield(B, p))
-                    return true
-                end
-            end
-            return false
+    quote
+        function $(esc(op))(A::$(esc(TYP))...)
+            Base.any($(esc(op))(getfield.(A, p)...) for p in fields($(esc(TYP))))
         end
+    end
+end
+
+macro struct_any(TYP, ops...)
+    esc(quote
+        @struct_any($TYP, $(Base.first(ops)))
+        @struct_any($TYP, $(Base.tail(ops)...))
     end)
 end
 
 """
     @struct_copy(TYP)
 
-Generate `Base.copy` for copying structs of type `TYP`. $(seealso("@struct_equal", "@struct_map"))
+Generate `Base.copy` for copying structs of type `TYP`. $(seealso("@struct_all", "@struct_any", "@struct_map"))
 
 # Example
 ```jldoctest
