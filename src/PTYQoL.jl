@@ -79,7 +79,7 @@ import Base: Fix1, Fix2, +, -, *, /, //, show, Splat
 (t::NTuple{N, Function})(x...) where N = tuple((f(x...) for f in t)...)
 for op in (:+, :*, :-, :/, ://)
     @eval begin
-        $op() = nothing
+        $op() = nothing # ambiguity
         $op(f::Function...) = ∘(splat($op), f)
         $op(f::Function, c::Number) = Fix2($op, c) ∘ f
         $op(c::Number, f::Function) = Fix1($op, c) ∘ f

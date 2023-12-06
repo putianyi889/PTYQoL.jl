@@ -1,5 +1,5 @@
 import Base: front
-export seealso, fields, @struct_equal, @struct_copy, @struct_map
+export seealso, fields, @struct_all, @struct_copy, @struct_map
 
 docref(s) = "[`$(string(s))`](@ref)"
 
@@ -32,9 +32,10 @@ The same as `fieldnames`, but is `@generated` so is fast.
 @generated fields(::Type{T}) where T = fieldnames(T)
 
 """
-    @struct_equal(TYP)
+    @struct_all(TYP, op)
+    @struct_all(TYP, ops...)
 
-Generate `Base.==` for comparing structs of type `TYP`. $(seealso("@struct_copy", "@struct_map"))
+Define the binary operator of the type `TYP` by applying the operator to each field and return true only when all the results are true. $(seealso("@struct_copy", "@struct_map"))
 
 # Example
 ```jldoctest
@@ -49,25 +50,47 @@ Foo(1, 1)
 julia> y = Foo(1.0,1.0)
 Foo(1.0, 1.0)
 
-julia> x==y
-false
+julia> x==y, isequal(x,y), isapprox(x,y)
+(false, false)
 
-julia> @struct_equal Foo;
+julia> isapprox(x,y)
+ERROR: MethodError: no method matching isapprox(::Foo, ::Foo)
 
-julia> x==y
-true
+julia> @struct_all Foo Base.:(==) Base.isequal Base.isapprox
+
+julia> x==y, isequal(x,y), isapprox(x,y)
+(true, true, true)
 ```
 """
-macro struct_equal(TYP)
+macro struct_all(TYP, op)
     esc(quote
-        import Base: ==
-        function ==(A::T1, B::T2) where {T1<:$TYP, T2<:$TYP}
+        function $op(A::T1, B::T2) where {T1<:$TYP, T2<:$TYP}
             for p in fields($TYP)
-                if getfield(A, p) != getfield(B, p)
+                if !$op(getfield(A, p), getfield(B, p))
                     return false
                 end
             end
             return true
+        end
+    end)
+end
+
+macro struct_all(TYP, ops...)
+    esc(quote
+        @struct_all($TYP, $(Base.first(ops)))
+        @struct_all($TYP, $(Base.tail(ops)...))
+    end)
+end
+
+macro struct_any(TYP, op)
+    esc(quote
+        function $op(A::T1, B::T2) where {T1<:$TYP, T2<:$TYP}
+            for p in fields($TYP)
+                if $op(getfield(A, p), getfield(B, p))
+                    return true
+                end
+            end
+            return false
         end
     end)
 end
