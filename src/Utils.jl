@@ -1,5 +1,5 @@
 import Base: front
-export seealso, fields, @struct_equal, @struct_copy, @struct_map
+export seealso, fields, @struct_all, @struct_any, @struct_copy, @struct_map
 
 docref(s) = "[`$(string(s))`](@ref)"
 
@@ -9,7 +9,7 @@ langenum(s, t...) = s * ", " *langenum(t...)
 """
     seealso(s...)
 
-Produce the "See also" parts of docstrings. $(seealso(docref, langenum))
+Produce the "See also" parts of docstrings.
 
 ```jldoctest
 julia> seealso(sin)
@@ -32,9 +32,10 @@ The same as `fieldnames`, but is `@generated` so is fast.
 @generated fields(::Type{T}) where T = fieldnames(T)
 
 """
-    @struct_equal(TYP)
+    @struct_all(TYP, op)
+    @struct_all(TYP, ops...)
 
-Generate `Base.==` for comparing structs of type `TYP`.
+Define the operator of the type `TYP` by applying the operator to each field and return true only when all the results are true. $(seealso("@struct_any", "@struct_copy", "@struct_map"))
 
 # Example
 ```jldoctest
@@ -49,33 +50,83 @@ Foo(1, 1)
 julia> y = Foo(1.0,1.0)
 Foo(1.0, 1.0)
 
-julia> x==y
-false
+julia> x==y, isequal(x,y)
+(false, false)
 
-julia> @struct_equal Foo;
+julia> isapprox(x,y)
+ERROR: MethodError: no method matching isapprox(::Foo, ::Foo)
 
-julia> x==y
-true
+julia> isfinite(x)
+ERROR: MethodError: no method matching isfinite(::Foo)
+
+julia> @struct_all Foo Base.:(==) Base.isequal Base.isapprox Base.isfinite
+
+julia> x==y, isequal(x,y), isapprox(x,y), isfinite(x)
+(true, true, true, true)
 ```
 """
-macro struct_equal(TYP)
-    esc(quote
-        import Base: ==
-        function ==(A::T1, B::T2) where {T1<:$TYP, T2<:$TYP}
-            for p in fields($TYP)
-                if getfield(A, p) != getfield(B, p)
-                    return false
-                end
-            end
-            return true
+macro struct_all(TYP, op)
+    quote
+        function $(esc(op))(A::$(esc(TYP))...)
+            Base.all($(esc(op))(getfield.(A, p)...) for p in fields($(esc(TYP))))
         end
+    end
+end
+
+macro struct_all(TYP, ops...)
+    esc(quote
+        @struct_all($TYP, $(Base.first(ops)))
+        @struct_all($TYP, $(Base.tail(ops)...))
+    end)
+end
+
+"""
+    @struct_any(TYP, op)
+    @struct_any(TYP, ops...)
+
+Define the binary operator of the type `TYP` by applying the operator to each field and return true when any of the results is true. $(seealso("@struct_all", "@struct_copy", "@struct_map"))
+
+# Example
+```jldoctest
+julia> struct Foo
+       a
+       b
+       end
+
+julia> x = Foo(Inf, NaN)
+Foo(Inf, NaN)
+
+julia> isinf(x)
+ERROR: MethodError: no method matching isinf(::Foo)
+
+julia> isnan(x)
+ERROR: MethodError: no method matching isnan(::Foo)
+
+julia> @struct_any Foo Base.isinf Base.isnan
+
+julia> isinf(x), isnan(x)
+(true, true)
+```
+"""
+macro struct_any(TYP, op)
+    quote
+        function $(esc(op))(A::$(esc(TYP))...)
+            Base.any($(esc(op))(getfield.(A, p)...) for p in fields($(esc(TYP))))
+        end
+    end
+end
+
+macro struct_any(TYP, ops...)
+    esc(quote
+        @struct_any($TYP, $(Base.first(ops)))
+        @struct_any($TYP, $(Base.tail(ops)...))
     end)
 end
 
 """
     @struct_copy(TYP)
 
-Generate `Base.copy` for copying structs of type `TYP`.
+Generate `Base.copy` for copying structs of type `TYP`. $(seealso("@struct_all", "@struct_any", "@struct_map"))
 
 # Example
 ```jldoctest
@@ -108,7 +159,7 @@ end
     @struct_map(TYP, op)
     @struct_map(TYP, ops...)
 
-Define the function(s) of the type `TYP` by applying the function(s) to each field and generate a new `TYP` with the values. The generated function(s) are somehow faster than the naive implementation.
+Define the function(s) of the type `TYP` by applying the function(s) to each field and generate a new `TYP` with the values. The generated function(s) are somehow faster than the naive implementation. $(seealso("@struct_all", "@struct_any", "@struct_copy"))
 
 # Example
 ```jldoctest
