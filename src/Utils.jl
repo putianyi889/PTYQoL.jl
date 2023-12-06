@@ -159,7 +159,7 @@ end
     @struct_map(TYP, op)
     @struct_map(TYP, ops...)
 
-Define the function(s) of the type `TYP` by applying the function(s) to each field and generate a new `TYP` with the values. The generated function(s) are somehow faster than the naive implementation. $(seealso("@struct_equal", "@struct_copy"))
+Define the function(s) of the type `TYP` by applying the function(s) to each field and generate a new `TYP` with the values. The generated function(s) are somehow faster than the naive implementation. $(seealso("@struct_all", "@struct_any", "@struct_copy"))
 
 # Example
 ```jldoctest
