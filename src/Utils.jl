@@ -192,14 +192,34 @@ macro struct_map(TYP, ops...)
     end)
 end
 
+import Base: Fix1, show, string
 export ln
 """
-    ln(x) = log(x)
+    const ln = Fix1(log,ℯ)
 
-The same as `log` but only accepts one argument.
+Natural logarithm.
 """
-ln(x::Number) = log(x)
+const ln = Fix1(log,ℯ)
+show(io::IO, ::MIME"text/plain", ::typeof(ln)) = print(io,"ln (alias function for $(Fix1){typeof(log), Irrational{:ℯ}})")
+string(::typeof(ln)) = "ln"
 
 export precision_convert
 precision_convert(::Type{BigFloat}, x, precision) = BigFloat(x, precision = precision)
 precision_convert(T, x, precision) = convert(T, x)
+
+export isalias
+"""
+    isalias(type)
+
+Check if a type is alias.
+
+# Examples
+```jldoctest
+julia> isalias(Vector)
+true
+
+julia> isalias(Array)
+false
+```
+"""
+@generated isalias(type::UnionAll) = string(type) != string(Base.typename(type).name)
