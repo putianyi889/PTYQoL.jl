@@ -222,4 +222,4 @@ julia> isalias(Array)
 false
 ```
 """
-@generated isalias(type::UnionAll) = string(type) != string(Base.typename(type).name)
+@generated isalias(::Type{T}) where T = string(T) != string(Base.typename(T).name)
