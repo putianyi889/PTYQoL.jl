@@ -110,7 +110,7 @@ end
     end
     @testset "AlgebraicNumbers" begin
         using AlgebraicNumbers
-        @test sincospi(1//3) == sincosd(60) == PTYQoLAlgebraicNumbersExt.sincos_alg(1//3)
+        @test sincospi(1//3) == sincosd(60) == (sin_alg(1//3), cos_alg(1//3))
         @test tanpi(AlgebraicNumber(1)) == AlgebraicNumber(0)
     end
 end
