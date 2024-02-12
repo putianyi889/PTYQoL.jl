@@ -80,6 +80,10 @@ end
         x = precision_convert(BigFloat, BigFloat(1), 128)
         @test precision(x) == 128
     end
+    @testset "fracpochhammer" begin
+        @test fracpochhammer(1, 2, 3) ≡ 0.25
+        @test fracpochhammer(1, 2, 0.5, 1, 3) ≡ 0.125
+    end
 end
 
 @testset "Extensions" begin
