@@ -110,7 +110,8 @@ end
     end
     @testset "AlgebraicNumbers" begin
         using AlgebraicNumbers
-        @test sinpi(1//3) == sin_alg(1//3)
+        @test sincospi(1//3) == sincos_alg(1//3) == sincosd(60)
+        @test tanpi(AlgebraicNumber(1)) == AlgebraicNumber(0)
     end
 end
 
