@@ -112,7 +112,7 @@ end
         using AlgebraicNumbers
         @test sincospi(1//3) == sincosd(60) == sincospi(1/3)
         @test tanpi(1//3) == tanpi(1/3)
-        @test sincospi(1//3) isa AlgebraicNumber
+        @test sincospi(1//3) isa NTuple{2,AlgebraicNumber}
         @test tanpi(1//3) isa AlgebraicNumber
     end
 end
