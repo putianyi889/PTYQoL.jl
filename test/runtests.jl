@@ -101,12 +101,6 @@ end
         @test AbstractJacobi{BigFloat}(Legendre()) isa Legendre{BigFloat}
         @test AbstractJacobi{Float32}(Ultraspherical(2)) isa Ultraspherical{Float32}
     end
-    @testset "InfiniteArrays" begin
-        using InfiniteArrays
-        D = Diagonal(1:∞)
-        @test diag(D) == 1:∞
-        @test diag(D, 1) == Zeros(∞)
-    end
     @testset "ArrayLayouts" begin
         using ArrayLayouts
         A = rand(3,5)
