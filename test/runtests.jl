@@ -114,8 +114,8 @@ end
     end
     @testset "AlgebraicNumbers" begin
         using AlgebraicNumbers
-        @test sincospi(1//3) == sincosd(60) == sincospi(1/3)
-        @test tanpi(1//3) == tanpi(1/3)
+        @test sincospi(1//3) == sincosd(60) == (sqrt(AlgebraicNumber(3))/2, 0.5)
+        @test tanpi(1//3) == sqrt(AlgebraicNumber(3))
         @test sincospi(1//3) isa NTuple{2,AlgebraicNumber}
         @test tanpi(1//3) isa AlgebraicNumber
     end
