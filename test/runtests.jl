@@ -80,6 +80,10 @@ end
         x = precision_convert(BigFloat, BigFloat(1), 128)
         @test precision(x) == 128
     end
+    @testset "fracpochhammer" begin
+        @test fracpochhammer(1, 2, 3) ≡ 0.25
+        @test fracpochhammer(1, 2, 0.5, 1, 3) ≡ 0.125
+    end
 end
 
 @testset "Extensions" begin
@@ -101,18 +105,19 @@ end
         @test AbstractJacobi{BigFloat}(Legendre()) isa Legendre{BigFloat}
         @test AbstractJacobi{Float32}(Ultraspherical(2)) isa Ultraspherical{Float32}
     end
-    @testset "InfiniteArrays" begin
-        using InfiniteArrays
-        D = Diagonal(1:∞)
-        @test diag(D) == 1:∞
-        @test diag(D, 1) == Zeros(∞)
-    end
     @testset "ArrayLayouts" begin
         using ArrayLayouts
         A = rand(3,5)
         ind = CartesianIndex(2,3)
         @test rowsupport(A, ind) == rowsupport(A,2)
         @test colsupport(A, ind) == colsupport(A,3)
+    end
+    @testset "AlgebraicNumbers" begin
+        using AlgebraicNumbers
+        @test sincospi(1//3) == sincosd(60) == sincospi(1/3)
+        @test tanpi(1//3) == tanpi(1/3)
+        @test sincospi(1//3) isa NTuple{2,AlgebraicNumber}
+        @test tanpi(1//3) isa AlgebraicNumber
     end
 end
 

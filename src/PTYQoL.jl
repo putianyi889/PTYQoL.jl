@@ -91,4 +91,10 @@ end
 show(io::IO, f::ComposedFunction{<:Fix1}) = print(io, f.outer.f, '(', f.outer.x, ',', f.inner, ')')
 show(io::IO, f::ComposedFunction{<:Fix2}) = print(io, f.outer.f, '(', f.inner, ',', f.outer.x, ')')
 
+# Against Julia Base
+# import Base: sinpi, cospi, tanpi, sincospi
+# sinpi(x::Integer) = zero(x)
+# cospi(x::Integer) = ifelse(isodd(x), -one(x), one(x))
+# tanpi(x::Integer) = zero(x)
+
 end

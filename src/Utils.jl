@@ -192,14 +192,59 @@ macro struct_map(TYP, ops...)
     end)
 end
 
+import Base: Fix1, show, string
 export ln
 """
-    ln(x) = log(x)
+    const ln = Fix1(log,ℯ)
 
-The same as `log` but only accepts one argument.
+Natural logarithm.
 """
-ln(x::Number) = log(x)
+const ln = Fix1(log,ℯ)
+show(io::IO, ::MIME"text/plain", ::typeof(ln)) = print(io,"ln (alias function for $(Fix1){typeof(log), Irrational{:ℯ}})")
+string(::typeof(ln)) = "ln"
 
 export precision_convert
 precision_convert(::Type{BigFloat}, x, precision) = BigFloat(x, precision = precision)
 precision_convert(T, x, precision) = convert(T, x)
+
+export isalias
+"""
+    isalias(type)
+
+Check if a type is alias.
+
+# Examples
+```jldoctest
+julia> isalias(Vector)
+true
+
+julia> isalias(Array)
+false
+```
+"""
+@generated isalias(::Type{T}) where T = string(T) != string(Base.typename(T).name)
+
+export fracpochhammer
+"""
+    fracpochhammer(a, b, n)
+
+Calculate the fraction of two Pochhammer symbols ``\\frac{(a)_n}{(b)_n}`` by multiplying the fractions. This approach reduces the risk of overflow/underflow when ``n`` is large.
+
+# Examples
+```jldoctest
+julia> fracpochhammer(1, 2, 3) # (1 * 2 * 3) / (2 * 3 * 4)
+0.25
+```
+
+    fracpochhammer(a, b, stepa, stepb, n)
+
+Similar to `fracpochhammer(a, b, n)`, except that the steps of the Pochhammer symbols are not necessarily ``1``.
+
+# Examples
+```jldoctest
+julia> fracpochhammer(1, 2, 0.5, 1, 3) # (1 * 1.5 * 2) / (2 * 3 * 4)
+0.125
+```
+"""
+fracpochhammer(a,b,n) = prod(range(a,length=n)./range(b,length=n));
+fracpochhammer(a,b,stepa,stepb,n) = prod(range(a,step=stepa,length=n)./range(b,step=stepb,length=n));
