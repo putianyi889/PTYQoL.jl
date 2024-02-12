@@ -114,6 +114,10 @@ end
         @test rowsupport(A, ind) == rowsupport(A,2)
         @test colsupport(A, ind) == colsupport(A,3)
     end
+    @testset "AlgebraicNumbers" begin
+        using AlgebraicNumbers
+        @test sinpi(1//3) ≡ sin_alg(1//3)
+    end
 end
 
 using Documenter

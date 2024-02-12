@@ -13,6 +13,7 @@ ClassicalOrthogonalPolynomials = "b30e2e7b-c4ee-47da-9d5f-2c5c27239acd"
 InfiniteArrays = "4858937d-0d70-526a-a4dd-2d5cb5dd786c"
 BandedMatrices = "aae01518-5342-5314-be14-df237901396f"
 ArrayLayouts = "4c555306-a7a7-4459-81d9-ec55ddd5c99a"
+AlgebraicNumbers = "e86d093a-a386-599e-b7c7-df0420c8bcba"
 
 [extensions]
 PTYQoLLinearAlgebraExt = "LinearAlgebra"
@@ -24,6 +25,7 @@ PTYQoLClassicalOrthogonalPolynomialsExt = "ClassicalOrthogonalPolynomials"
 PTYQoLInfiniteArraysExt = "InfiniteArrays"
 PTYQoLBandedMatricesExt = "BandedMatrices"
 PTYQoLArrayLayoutsExt = "ArrayLayouts"
+PTYQoLAlgebraicNumbersExt = "AlgebraicNumbers"
 
 [compat]
 julia = "1"
@@ -38,6 +40,7 @@ ClassicalOrthogonalPolynomials = "b30e2e7b-c4ee-47da-9d5f-2c5c27239acd"
 InfiniteArrays = "4858937d-0d70-526a-a4dd-2d5cb5dd786c"
 ArrayLayouts = "4c555306-a7a7-4459-81d9-ec55ddd5c99a"
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+AlgebraicNumbers = "e86d093a-a386-599e-b7c7-df0420c8bcba"
 
 [targets]
-test = ["Test", "Aqua", "LinearAlgebra", "Documenter", "DomainSets", "ContinuumArrays", "ClassicalOrthogonalPolynomials", "InfiniteArrays", "ArrayLayouts"]
+test = ["Test", "Aqua", "LinearAlgebra", "Documenter", "DomainSets", "ContinuumArrays", "ClassicalOrthogonalPolynomials", "InfiniteArrays", "ArrayLayouts", "AlgebraicNumbers"]
