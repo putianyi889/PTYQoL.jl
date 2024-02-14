@@ -11,9 +11,12 @@ Jacobi{T}(a::Jacobi) where T = Jacobi(T(a.a), T(a.b))
 
 # ambiguities
 import Base: _sum
-import ClassicalOrthogonalPolynomials: Weighted, ChebyshevU, PiecewiseInterlace, BlockBroadcastArray
+import ClassicalOrthogonalPolynomials: Weighted, ChebyshevU, PiecewiseInterlace, BlockBroadcastArray, rowsupport, colsupport, LanczosConversion
 _sum(::Weighted{T,<:ChebyshevU}, ::Colon) where T = @assert Colon()==1
 _sum(::Weighted{T,<:Chebyshev}, ::Colon) where T = @assert Colon()==1
 _sum(P::PiecewiseInterlace, ::Colon) = BlockBroadcastArray(hcat, unitblocks.(_sum.(P.args, Colon()))...)
+
+rowsupport(A::LanczosConversion, i::CartesianIndex{2}) = rowsupport(A, first(i))
+colsupport(A::LanczosConversion, i::CartesianIndex{2}) = colsupport(A, last(i))
 
 end

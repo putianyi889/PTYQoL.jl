@@ -4,18 +4,26 @@ import Base: +, -, *, div, cld, mod, ==, <, isless, ≤, fld
 import Base.Checked: checked_sub, checked_mul
 import Infinities: InfiniteCardinal, ∞, Infinity, ComplexInfinity, RealInfinity, NotANumber, ℵ₀
 
+RealInfinity(x::Complex) = RealInfinity(Bool(x))
+ComplexInfinity(x::Complex) = ComplexInfinity(Real(x))
+
 +(::InfiniteCardinal, x::Rational) = ∞ + x
 +(x::Rational, ::InfiniteCardinal) = x + ∞
++(x::Complex, ::InfiniteCardinal) = x + ∞
++(x::Complex{Bool}, ::InfiniteCardinal) = x + ∞
 +(::InfiniteCardinal, x::Complex{Bool}) = ∞ + x
 +(::InfiniteCardinal, x::Complex) = ∞ + x
 
 -(x::InfiniteCardinal, y::InfiniteCardinal) = x > y ? x : -∞
 -(x::Infinity, y::ComplexInfinity) = x + (-y)
 -(::InfiniteCardinal, x::Complex{Bool}) = ∞ - x
+-(::InfiniteCardinal, x::Complex) = ∞ - x
 -(x::Complex, ::InfiniteCardinal) = x - ∞
+-(x::Complex{Bool}, ::InfiniteCardinal) = x - ∞
 
 *(x::InfiniteCardinal, y::InfiniteCardinal) = max(x,y)
 *(x::InfiniteCardinal, y::Complex) = y*x
+*(x::InfiniteCardinal, y::Complex{Bool}) = y*x
 *(x::RealInfinity, y::Complex{Bool}) = ComplexInfinity(x)*y
 *(a::Complex{Bool}, y::Infinity) = a*ComplexInfinity(y)
 *(a::Complex{Bool},y::RealInfinity) = a*ComplexInfinity(y)
@@ -28,8 +36,10 @@ cld(x::Rational, ::InfiniteCardinal) = signbit(x) ? zero(x) : one(x)
 cld(x::InfiniteCardinal, ::Rational) = x
 
 fld(x::InfiniteCardinal, ::Rational) = x
+fld(x::Rational, ::InfiniteCardinal) = signbit(x) ? -one(x) : zero(x)
 
 mod(::RealInfinity, ::InfiniteCardinal) = NotANumber()
+mod(::InfiniteCardinal, ::Rational) = NotANumber()
 
 ==(x::Complex, y::RealInfinity) = y==x
 ==(x::AbstractIrrational, y::RealInfinity) = y==x
@@ -37,12 +47,14 @@ mod(::RealInfinity, ::InfiniteCardinal) = NotANumber()
 ==(::InfiniteCardinal, y::AbstractIrrational) = ∞ == y
 ==(y::AbstractIrrational, x::Infinity) = x == y
 ==(x::AbstractIrrational, ::InfiniteCardinal) = x == ∞
+==(x::Rational, ::InfiniteCardinal) = x == ∞
 ==(y::Complex, x::Infinity) = x == y
 
 <(::InfiniteCardinal, ::Rational) = false
 <(x::Rational, ::InfiniteCardinal{0}) = x < ∞
 
 ≤(::InfiniteCardinal{0}, x::Rational) = ∞ ≤ x
+≤(::InfiniteCardinal, x::Rational) = false
 
 isless(::InfiniteCardinal, ::InfiniteCardinal{0}) = false
 isless(x::RealInfinity, y::ComplexInfinity{Bool}) = signbit(x) && y ≠ -∞

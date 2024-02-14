@@ -132,17 +132,16 @@ end
 
 using Aqua
 @testset "Project quality" begin
-    Aqua.test_all(PTYQoL, ambiguities=true, piracies=false, deps_compat=false)
-end
+    using PTYQoL, AlgebraicNumbers, ArrayLayouts, BandedMatrices, BlockBandedMatrices, CircularArrays, ClassicalOrthogonalPolynomials, ContinuumArrays, DomainSets, InfiniteArrays, Infinities, IntervalSets, LinearAlgebra, QuasiArrays 
+    Aqua.test_all(PTYQoL, ambiguities=false, piracies=false, deps_compat=false)
 
-@testset "Ambiguities" begin
-    ambi = detect_ambiguities(Base, PTYQoL, Infinities)
+    ambi = detect_ambiguities(Base, PTYQoL, AlgebraicNumbers, ArrayLayouts, BandedMatrices, BlockBandedMatrices, CircularArrays, ClassicalOrthogonalPolynomials, ContinuumArrays, DomainSets, InfiniteArrays, Infinities, IntervalSets, LinearAlgebra, QuasiArrays)
     internal = similar(ambi, 0)
     extension = similar(ambi, 0)
     external = similar(ambi, 0)
     while !isempty(ambi)
         inst = pop!(ambi)
-        if inst[1].module == PTYQoL || inst[2].module == PTYQoL
+        if startswith(inst[1].module, PTYQoL) || startswith(inst[2].module, PTYQoL)
             push!(internal, inst)
         elseif inst[1].module == Base || inst[2].module == Base
             push!(extension, inst)
@@ -153,9 +152,9 @@ end
     if !isempty(internal)
         display(internal)
         @test length(internal) == 0
-    end
-    if !isempty(extension)
+    elseif !isempty(extension)
         display(extension)
+        println("There are $(length(extension)) extension ambiguities.")
         @test_skip length(extension) == 0
     end
 end

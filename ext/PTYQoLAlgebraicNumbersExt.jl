@@ -19,7 +19,7 @@ end
 
 promote_rule(::Type{<:AlgebraicNumber}, ::Type{T}) where T <: AbstractFloat = T
 float(x::AlgebraicNumber) = x.apprx
-(::Type{T})(x::AlgebraicNumber) where T<:Number = T(x.apprx)
+(::Type{T})(x::AlgebraicNumber) where T<:AbstractFloat = T(x.apprx)
 AlgebraicNumber(x::AlgebraicNumber) = x
 
 end # module
