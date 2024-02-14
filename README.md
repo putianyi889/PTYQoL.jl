@@ -8,4 +8,5 @@ Full of type piracies. However they are not supposed to break anything. They onl
 
 **Remark** Technically this package does break things. Due to the extension, some method errors are eliminated, so if you rely on those errors, don't use this package.
 
-Rule of new version: an external PR is merged, an issue is resolved, or the number of line changes reach 100.
+Rule of new version:
+- `(It's been at least 24 hrs since the last version) && ((an external PR is merged) || (an issue is resolved) || (the number of line changes reach 100)`
