@@ -246,5 +246,5 @@ julia> fracpochhammer(1, 2, 0.5, 1, 3) # (1 * 1.5 * 2) / (2 * 3 * 4)
 0.125
 ```
 """
-fracpochhammer(a,b,n) = prod(range(a,length=n)./range(b,length=n));
-fracpochhammer(a,b,stepa,stepb,n) = prod(range(a,step=stepa,length=n)./range(b,step=stepb,length=n));
+fracpochhammer(a,b,n) = prod(x/y for (x,y) in zip(range(a,length=n),range(b,length=n)));
+fracpochhammer(a,b,stepa,stepb,n) = prod(x/y for (x,y) in zip(range(a,step=stepa,length=n),range(b,step=stepb,length=n)));
