@@ -7,6 +7,7 @@ version = "0.2.1"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 CircularArrays = "7a955b69-7140-5f4e-a0ed-f168c5e2e749"
 ContinuumArrays = "7ae1f121-cc2c-504b-ac30-9b923412ae5c"
+Infinities = "e1ba4f0e-776d-440f-acd9-e1d2e9742647"
 IntervalSets = "8197267c-284f-5f27-9208-e0e47529a953"
 QuasiArrays = "c4ea9172-b204-11e9-377d-29865faadc5c"
 ClassicalOrthogonalPolynomials = "b30e2e7b-c4ee-47da-9d5f-2c5c27239acd"
@@ -18,6 +19,7 @@ AlgebraicNumbers = "e86d093a-a386-599e-b7c7-df0420c8bcba"
 PTYQoLLinearAlgebraExt = "LinearAlgebra"
 PTYQoLCircularArraysExt = "CircularArrays"
 PTYQoLContinuumArraysExt = "ContinuumArrays"
+PTYQoLInfinitiesExt = "Infinities"
 PTYQoLIntervalSetsExt = "IntervalSets"
 PTYQoLQuasiArraysExt = "QuasiArrays"
 PTYQoLClassicalOrthogonalPolynomialsExt = "ClassicalOrthogonalPolynomials"
@@ -40,4 +42,4 @@ Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
 AlgebraicNumbers = "e86d093a-a386-599e-b7c7-df0420c8bcba"
 
 [targets]
-test = ["Test", "Aqua", "LinearAlgebra", "Documenter", "DomainSets", "ContinuumArrays", "ClassicalOrthogonalPolynomials", "ArrayLayouts", "AlgebraicNumbers"]
+test = ["Test", "Aqua", "LinearAlgebra", "Documenter", "DomainSets", "ContinuumArrays", "ClassicalOrthogonalPolynomials", "ArrayLayouts", "AlgebraicNumbers", "Infinities"]

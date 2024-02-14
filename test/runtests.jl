@@ -119,6 +119,9 @@ end
         @test sincospi(1//3) isa NTuple{2,AlgebraicNumber}
         @test tanpi(1//3) isa AlgebraicNumber
     end
+    @testset "Infinities" begin
+        using Infinities
+    end
 end
 
 using Documenter
@@ -130,4 +133,29 @@ end
 using Aqua
 @testset "Project quality" begin
     Aqua.test_all(PTYQoL, ambiguities=true, piracies=false, deps_compat=false)
+end
+
+@testset "Ambiguities" begin
+    ambi = detect_ambiguities(Base, PTYQoL, Infinities)
+    internal = similar(ambi, 0)
+    extension = similar(ambi, 0)
+    external = similar(ambi, 0)
+    while !isempty(ambi)
+        inst = pop!(ambi)
+        if inst[1].module == PTYQoL || inst[2].module == PTYQoL
+            push!(internal, inst)
+        elseif inst[1].module == Base || inst[2].module == Base
+            push!(extension, inst)
+        else
+            push!(external, inst)
+        end
+    end
+    if !isempty(internal)
+        display(internal)
+        @test length(internal) == 0
+    end
+    if !isempty(extension)
+        display(extension)
+        @test_skip length(extension) == 0
+    end
 end
