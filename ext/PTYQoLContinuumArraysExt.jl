@@ -29,4 +29,11 @@ end
 
 isempty(a::Inclusion) = isempty(a.domain)
 
+# ambiguities
+import ContinuumArrays: LinearSpline, HeavisideSpline
+import Base: _sum
+
+_sum(::HeavisideSpline, ::Colon) = error("not implemented")
+_sum(::LinearSpline, ::Colon) = error("not implemented")
+
 end
