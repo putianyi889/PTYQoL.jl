@@ -173,6 +173,7 @@ using BeepBeep
 if Sys.iswindows()
     if startswith(relpath(@__FILE__, "/"), "C:\\Users\\runneradmin") # the CI runner
     else
+        println(relpath(@__FILE__, "/"))
         beep(2)
     end
 end
