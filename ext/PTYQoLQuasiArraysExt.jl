@@ -16,7 +16,8 @@ import Base: convert, to_indices, _to_subscript_indices, __to_subscript_indices
 
 convert(::Type{T}, index::QuasiCartesianIndex{1}) where {T<:VecElement} = convert(T, index[1])
 convert(::Type{T}, index::QuasiCartesianIndex{1}) where {T>:Missing} = convert(T, index[1])
-convert(::Type{T}, index::QuasiCartesianIndex{1}) where {T>:Union{Missing,Nothing}} = convert(T, index[1])
+convert(::Type{T}, index::QuasiCartesianIndex{1}) where {T>:Nothing} = convert(T, index[1])
+convert(::Type{T}, index::QuasiCartesianIndex{1}) where {T>:Union{Missing, Nothing}} = convert(T, index[1])
 
 @inline to_indices(A::AbstractQuasiArray, I::Tuple{}) = to_indices(A, axes(A), I)
 

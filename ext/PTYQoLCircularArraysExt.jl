@@ -9,4 +9,10 @@ Alias for [`CircularArray{T,2,A}`](@ref).
 """
 const CircularMatrix{T} = CircularArray{T, 2}
 
+# ambiguities
+import Base: similar
+import CircularArrays: CircularArray, _similar
+
+@inline similar(arr::CircularArray, ::Type{T}, dims::Tuple{Integer, Vararg{Integer}}) where T = _similar(arr, T, dims)
+
 end

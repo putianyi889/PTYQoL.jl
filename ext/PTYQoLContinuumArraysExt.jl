@@ -30,10 +30,11 @@ end
 isempty(a::Inclusion) = isempty(a.domain)
 
 # ambiguities
-import ContinuumArrays: LinearSpline, HeavisideSpline
+import ContinuumArrays: LinearSpline, HeavisideSpline, Spline
 import Base: _sum
 
 _sum(::HeavisideSpline, ::Colon) = error("not implemented")
 _sum(::LinearSpline, ::Colon) = error("not implemented")
+_sum(::Spline{-1,T}, ::Colon) where T = error("not implemented")
 
 end
