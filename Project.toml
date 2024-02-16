@@ -5,6 +5,7 @@ version = "0.2.4"
 
 [weakdeps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+BlockArrays = "8e7c35d0-a365-5155-bbbb-fb81a777f24e"
 BlockBandedMatrices = "ffab5731-97b5-5995-9138-79e8c1846df0"
 CircularArrays = "7a955b69-7140-5f4e-a0ed-f168c5e2e749"
 ContinuumArrays = "7ae1f121-cc2c-504b-ac30-9b923412ae5c"
@@ -20,6 +21,7 @@ AlgebraicNumbers = "e86d093a-a386-599e-b7c7-df0420c8bcba"
 
 [extensions]
 PTYQoLLinearAlgebraExt = "LinearAlgebra"
+PTYQoLBlockArraysExt = "BlockArrays"
 PTYQoLBlockBandedMatricesExt = "BlockBandedMatrices"
 PTYQoLCircularArraysExt = "CircularArrays"
 PTYQoLContinuumArraysExt = "ContinuumArrays"
@@ -41,6 +43,7 @@ Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+BeepBeep = "97dd0070-d6c0-43ac-b134-ca84cdbd343e"
 
 [targets]
-test = ["Test", "Aqua", "LinearAlgebra", "Documenter", "DomainSets", "ContinuumArrays", "ClassicalOrthogonalPolynomials", "ArrayLayouts", "AlgebraicNumbers", "Infinities", "BlockBandedMatrices", "BandedMatrices", "CircularArrays", "IntervalSets", "QuasiArrays", "InfiniteArrays"]
+test = ["Test", "Aqua", "LinearAlgebra", "Documenter", "DomainSets", "ContinuumArrays", "ClassicalOrthogonalPolynomials", "ArrayLayouts", "AlgebraicNumbers", "Infinities", "BlockBandedMatrices", "BandedMatrices", "CircularArrays", "IntervalSets", "QuasiArrays", "InfiniteArrays", "BlockArrays", "BeepBeep"]
