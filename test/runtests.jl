@@ -170,4 +170,9 @@ using Aqua
 end
 
 using BeepBeep
-beep(2)
+if Sys.iswindows()
+    if relpath((@__FILE__)*"/../..","/") == "C:\\Users\\runneradmin" # the CI runner
+    else
+        beep(2)
+    end
+end
