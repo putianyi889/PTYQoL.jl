@@ -171,9 +171,7 @@ end
 
 using BeepBeep
 if Sys.iswindows()
-    if startswith(relpath(@__FILE__, "/"), "a\\") # the CI runner
-    else
-        println(relpath(@__FILE__, "/"))
+    if relpath(@__FILE__, "/") != "a\\PTYQoL.jl\\PTYQoL.jl\\test\\runtests.jl" # the CI runner
         beep(2)
     end
 end
