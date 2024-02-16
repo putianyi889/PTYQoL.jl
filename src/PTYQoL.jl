@@ -97,4 +97,8 @@ show(io::IO, f::ComposedFunction{<:Fix2}) = print(io, f.outer.f, '(', f.inner, '
 # cospi(x::Integer) = ifelse(isodd(x), -one(x), one(x))
 # tanpi(x::Integer) = zero(x)
 
+# https://github.com/JuliaLang/julia/pull/53360
+import Base: mapreduce
+mapreduce(f, op) = f()
+
 end

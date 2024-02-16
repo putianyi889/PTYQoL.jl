@@ -132,16 +132,16 @@ end
 
 using Aqua
 @testset "Project quality" begin
-    using PTYQoL, AlgebraicNumbers, ArrayLayouts, BandedMatrices, BlockBandedMatrices, CircularArrays, ClassicalOrthogonalPolynomials, ContinuumArrays, DomainSets, InfiniteArrays, Infinities, IntervalSets, LinearAlgebra, QuasiArrays 
+    using PTYQoL, AlgebraicNumbers, ArrayLayouts, BandedMatrices, BlockBandedMatrices, CircularArrays, ClassicalOrthogonalPolynomials, ContinuumArrays, DomainSets, InfiniteArrays, Infinities, IntervalSets, LinearAlgebra, QuasiArrays, BlockArrays 
     Aqua.test_all(PTYQoL, ambiguities=false, piracies=false, deps_compat=false)
 
-    ambi = detect_ambiguities(Base, PTYQoL, AlgebraicNumbers, ArrayLayouts, BandedMatrices, BlockBandedMatrices, CircularArrays, ClassicalOrthogonalPolynomials, ContinuumArrays, DomainSets, InfiniteArrays, Infinities, IntervalSets, LinearAlgebra, QuasiArrays)
+    ambi = detect_ambiguities(Base, PTYQoL, AlgebraicNumbers, ArrayLayouts, BandedMatrices, BlockBandedMatrices, CircularArrays, ClassicalOrthogonalPolynomials, ContinuumArrays, DomainSets, InfiniteArrays, Infinities, IntervalSets, LinearAlgebra, QuasiArrays, BlockArrays)
     internal = similar(ambi, 0)
     extension = similar(ambi, 0)
     external = similar(ambi, 0)
     while !isempty(ambi)
         inst = pop!(ambi)
-        if startswith(inst[1].module, PTYQoL) || startswith(inst[2].module, PTYQoL)
+        if (startswith(inst[1].module, PTYQoL) && inst[2].module == Base) || (startswith(inst[2].module, PTYQoL) && inst[1].module == Base) || string(inst[1].module) == string(PTYQoL, inst[2].module, "Ext") || string(inst[2].module) == string(PTYQoL, inst[1].module, "Ext")
             push!(internal, inst)
         elseif inst[1].module == Base || inst[2].module == Base
             push!(extension, inst)
@@ -150,11 +150,28 @@ using Aqua
         end
     end
     if !isempty(internal)
-        display(internal)
+        for m in internal
+            display(m[1])
+            display(m[2])
+            Aqua.ambiguity_hint(m...)
+            print("\n\n\n")
+        end
         @test length(internal) == 0
     elseif !isempty(extension)
-        display(extension)
-        println("There are $(length(extension)) extension ambiguities.")
+        for m in extension
+            display(m[1])
+            display(m[2])
+            Aqua.ambiguity_hint(m...)
+            print("\n\n\n")
+        end
+        println("There are $(length(extension)) ambiguities that can be solved by extension.")
         @test_skip length(extension) == 0
+    end
+end
+
+using BeepBeep
+if Sys.iswindows()
+    if relpath(@__FILE__, "/") != "a\\PTYQoL.jl\\PTYQoL.jl\\test\\runtests.jl" # the CI runner
+        beep(2)
     end
 end
