@@ -249,3 +249,102 @@ julia> fracpochhammer(1, 2, 0.5, 1, 3) # (1 * 1.5 * 2) / (2 * 3 * 4)
 fracpochhammer(a,b,n) = prod(x/y for (x,y) in zip(range(a,length=n),range(b,length=n)))
 fracpochhammer(a,b,stepa,stepb,n) = prod(x/y for (x,y) in zip(range(a,step=stepa,length=n),range(b,step=stepb,length=n)))
 
+const TupleN{T,N} = Tuple{Vararg{T,N}}
+const Tuple1N{T,N} = Tuple{T, Vararg{T,N}}
+const Tuple2N{T,N} = Tuple{T, T, Vararg{T,N}}
+
+export @Vararg1
+"""
+    @Vararg1
+
+Use before a function definition to let `x::T...` means at least one (instead of zero by Julia default) of type `T`. This can be used to avoid ambiguity as all `Vararg{T}` overlap at zero argument.
+
+# Example
+```jldoctest
+julia> mysum1(x::Int...) = x
+mysum1 (generic function with 1 method)
+
+julia> mysum1() # works for 0 argument
+()
+
+julia> mysum1(x::Float64...) = x
+mysum1 (generic function with 2 methods)
+
+julia> mysum1()
+ERROR: MethodError: mysum1() is ambiguous.
+
+julia> @Vararg1 mysum2(x::Int...) = x
+mysum2 (generic function with 1 method)
+
+julia> @Vararg1 mysum2(x::Float64...) = x
+mysum2 (generic function with 2 methods)
+
+julia> mysum2()
+ERROR: MethodError: no method matching mysum2()
+```
+"""
+macro Vararg1(expr)
+    if expr.head in (Symbol(:(=)), Symbol(:function))
+        lhs = expr.args[1]
+        vname = Symbol[]
+        newlhs = copy(lhs)
+
+        # peel off where statements
+        lhsbody = lhs
+        newlhsbody = newlhs
+        while lhsbody.head == Symbol(:where) 
+            lhsbody = lhsbody.args[1]
+            newlhsbody = newlhsbody.args[1]
+        end
+
+        # manipulate the argument list
+        if lhsbody.head == Symbol(:call)
+            fname = lhsbody.args[1]
+            newlhsbody.args = Any[fname] # reconstruct the argument list
+            for arg in lhsbody.args[2:end]
+                if arg.head == Symbol(:(...)) # expand (x::T...) to (x_first::T, x_tail:T...)
+                    push!(vname, arg.args[1].args[1])
+                    push!(newlhsbody.args, Vararg_expand(arg.args[1])...)
+                else # keep (x::T) statements
+                    push!(newlhsbody.args, arg)
+                end
+            end
+        else
+            throw(ArgumentError("Unrecognised left side"))
+        end
+
+        # manipulate the function body
+        rhs = expr.args[2]
+        newrhs = rhs
+        if rhs.head == Symbol(:block)
+            # add assignments like (x = (x_first, x_tail...)) before the first line
+            for vn in vname
+                pushfirst!(newrhs.args, Vararg_assign(vn))
+            end
+        else
+            throw(ArgumentError("Unrecognised right side"))
+        end
+        esc(Expr(expr.head, newlhs, newrhs))
+    else
+        throw(ArgumentError("Unrecognised function definition"))
+    end
+end
+macro Vararg1(expr...)
+    Vararg1(Meta.@dump(expr...))
+end
+
+function Vararg_expand(expr)
+    if expr.head == Symbol(:(::)) # expr = :(x::T)
+        vname = expr.args[1] # x
+        type = expr.args[2] # T
+        firstexpr = Expr(:(::), _first(vname), type) # :(x_first::T)
+        tailexpr = Expr(:(...), Expr(:(::), _tail(vname), type)) # :(x_tail::T...)
+        firstexpr, tailexpr
+    else
+        throw(ArgumentError("Unrecognised expression $(expr)"))
+    end
+end
+_first(vname) = Symbol("$(vname)_first")
+_tail(vname) = Symbol("$(vname)_tail")
+
+Vararg_assign(vname) = :($vname = ($(_first(vname)), $(_tail(vname))...)) # x = (x_first, x_tail...)

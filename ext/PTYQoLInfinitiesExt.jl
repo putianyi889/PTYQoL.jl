@@ -1,13 +1,15 @@
 module PTYQoLInfinitiesExt
 
-import Base: +, -, *, div, cld, mod, ==, <, isless, ≤, fld, TwicePrecision, AbstractChar
+import Base: +, -, *, div, cld, mod, ==, <, isless, ≤, fld, TwicePrecision, AbstractChar, Bool
 import Base.Checked: checked_sub, checked_mul
-import Infinities: InfiniteCardinal, ∞, Infinity, ComplexInfinity, RealInfinity, NotANumber, ℵ₀
+import Infinities: InfiniteCardinal, ∞, Infinity, ComplexInfinity, RealInfinity, NotANumber, ℵ₀, _convert
 
 RealInfinity(x::Complex) = RealInfinity(Bool(x))
 RealInfinity(x::TwicePrecision) = RealInfinity(Bool(x))
 ComplexInfinity(x::Complex) = ComplexInfinity(Real(x))
 ComplexInfinity{T}(x::AbstractChar) where T<:Real = ComplexInfinity(Real(x))
+
+Bool(x::RealInfinity) = _convert(Bool, x)
 
 +(::InfiniteCardinal, x::Rational) = ∞ + x
 +(x::Rational, ::InfiniteCardinal) = x + ∞
@@ -34,9 +36,10 @@ ComplexInfinity{T}(x::AbstractChar) where T<:Real = ComplexInfinity(Real(x))
 *(a::Complex{Bool}, y::Infinity) = a*ComplexInfinity(y)
 *(a::Complex{Bool},y::RealInfinity) = a*ComplexInfinity(y)
 *(a::Rational, ::InfiniteCardinal) = a * ∞
-*(a::Complex{Bool}, b::InfiniteCardinal) = a * ∞
-*(a::Complex, b::InfiniteCardinal) = a * ∞
+*(a::Complex{Bool}, ::InfiniteCardinal) = a * ∞
+*(a::Complex, ::InfiniteCardinal) = a * ∞
 *(a::InfiniteCardinal, b::Rational) = b*a
+*(y::Infinity, a::Complex{Bool}) = ComplexInfinity(y)*a
 
 div(x::InfiniteCardinal, ::Rational) = x
 div(x::Rational, ::InfiniteCardinal) = zero(x)
@@ -59,11 +62,13 @@ end
 ==(x::RealInfinity, y::AbstractIrrational) = isinf(y) && signbit(y) == signbit(x)
 ==(x::RealInfinity, y::Complex) = isinf(y) && signbit(y) == signbit(x)
 ==(::InfiniteCardinal, y::AbstractIrrational) = ∞ == y
+==(::InfiniteCardinal, y::Rational) = ∞ == y
 ==(y::AbstractIrrational, x::Infinity) = x == y
 ==(x::AbstractIrrational, ::InfiniteCardinal) = x == ∞
 ==(x::Rational, ::InfiniteCardinal) = x == ∞
 ==(y::Complex, x::Infinity) = x == y
 ==(x::Infinity, y::Complex) = isinf(y) && angle(y) == angle(x)
+==(x::Infinity, y::AbstractIrrational) = isinf(y) && angle(y) == angle(x)
 
 <(::InfiniteCardinal, ::Rational) = false
 <(x::Rational, ::InfiniteCardinal) = true
