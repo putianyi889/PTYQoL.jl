@@ -12,7 +12,7 @@ broadcasted(::typeof(literal_pow), ::typeof(^), x::AbstractQuasiVector, ::Val{b}
 # ambiguities
 import QuasiArrays: AbstractQuasiArray, AbstractQuasiMatrix, rowsupport, colsupport, MulQuasiArray
 import QuasiArrays.QuasiIteratorsMD: QuasiCartesianIndex
-import Base: convert, to_indices, _to_subscript_indices, __to_subscript_indices
+import Base: convert, to_indices, _to_subscript_indices, __to_subscript_indices, @_inline_meta, to_index
 
 convert(::Type{T}, index::QuasiCartesianIndex{1}) where {T<:VecElement} = convert(T, index[1])
 convert(::Type{T}, index::QuasiCartesianIndex{1}) where {T>:Missing} = convert(T, index[1])
@@ -21,10 +21,19 @@ convert(::Type{T}, index::QuasiCartesianIndex{1}) where {T>:Union{Missing, Nothi
 
 @inline to_indices(A::AbstractQuasiArray, I::Tuple{}) = to_indices(A, axes(A), I)
 
+# this change happens at https://github.com/JuliaLang/julia/pull/45869
+@static if VERSION <= v"1.10.1"
+    to_indices(A::AbstractQuasiArray, ::Tuple{}, I::Union{Tuple{BitArray{N}}, Tuple{Array{Bool, N}}}) where N = (@_inline_meta; (to_index(A, I[1]), to_indices(A, (), tail(I))...))
+else
+    to_indices(A::AbstractQuasiArray, ::Tuple{}, I::Tuple{AbstractArray{Bool, N}, Vararg}) where N = (@_inline_meta; (to_index(A, I[1]), to_indices(A, (), tail(I))...))
+end
+
 _to_subscript_indices(A::AbstractQuasiMatrix, J::Tuple, Jrem::Tuple) = J
 _to_subscript_indices(A::AbstractQuasiMatrix, J::Tuple, Jrem::Tuple{}) = __to_subscript_indices(A, axes(A), J, Jrem)
 
 rowsupport(B::MulQuasiArray, i::CartesianIndex{2}) = rowsupport(B, first(i))
 colsupport(B::MulQuasiArray, i::CartesianIndex{2}) = colsupport(B, last(i))
+
+
 
 end

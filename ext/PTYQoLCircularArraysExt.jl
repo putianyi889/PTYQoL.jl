@@ -13,6 +13,7 @@ const CircularMatrix{T} = CircularArray{T, 2}
 import Base: similar
 import CircularArrays: CircularArray, _similar
 
+# https://github.com/Vexatos/CircularArrays.jl/pull/31
 @inline similar(arr::CircularArray, ::Type{T}, dims::Tuple{Integer, Vararg{Integer}}) where T = _similar(arr, T, dims)
 
 end
