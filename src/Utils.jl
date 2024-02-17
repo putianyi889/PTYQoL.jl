@@ -261,22 +261,22 @@ Use before a function definition to let `x::T...` means at least one (instead of
 
 # Example
 ```jldoctest
-julia> mysum1(x::Int...) = sum(x) # sum up integers
+julia> mysum1(x::Int...) = x
 mysum1 (generic function with 1 method)
 
 julia> mysum1() # works for 0 argument
-0
+()
 
-julia> mysum1(x::Float64...) = sum(x) # sum up floats
+julia> mysum1(x::Float64...) = x
 mysum1 (generic function with 2 methods)
 
 julia> mysum1()
 ERROR: MethodError: mysum1() is ambiguous.
 
-julia> @Vararg1 mysum2(x::Int...) = sum(x)
+julia> @Vararg1 mysum2(x::Int...) = x
 mysum2 (generic function with 1 method)
 
-julia> @Vararg1 mysum2(x::Float64...) = sum(x)
+julia> @Vararg1 mysum2(x::Float64...) = x
 mysum2 (generic function with 2 methods)
 
 julia> mysum2()
