@@ -22,10 +22,4 @@ float(x::AlgebraicNumber) = x.apprx
 (::Type{T})(x::AlgebraicNumber) where T<:AbstractFloat = T(x.apprx)
 AlgebraicNumber(x::AlgebraicNumber) = x
 
-# ambiguities
-import Base: promote_rule
-import AlgebraicNumbers: AlgebraicNumber
-
-promote_rule(::Type{Bool},::Type{AlgebraicNumber{S,F}}) where {S,F} = AlgebraicNumber
-
 end # module
