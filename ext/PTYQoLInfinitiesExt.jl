@@ -6,10 +6,13 @@ import Infinities: InfiniteCardinal, ∞, Infinity, ComplexInfinity, RealInfinit
 
 RealInfinity(x::Complex) = RealInfinity(Bool(x))
 RealInfinity(x::TwicePrecision) = RealInfinity(Bool(x))
+RealInfinity(x::AbstractChar) = RealInfinity(Bool(x))
 ComplexInfinity(x::Complex) = ComplexInfinity(Real(x))
-ComplexInfinity{T}(x::AbstractChar) where T<:Real = ComplexInfinity(Real(x))
+ComplexInfinity{T}(x::TwicePrecision) where T<:Real = ComplexInfinity(T(x))
+ComplexInfinity{T}(x::AbstractChar) where T<:Real = ComplexInfinity(T(x))
 
 Bool(x::RealInfinity) = _convert(Bool, x)
+Bool(x::Infinity) = _convert(Bool, x)
 
 +(::InfiniteCardinal, x::Rational) = ∞ + x
 +(x::Rational, ::InfiniteCardinal) = x + ∞
