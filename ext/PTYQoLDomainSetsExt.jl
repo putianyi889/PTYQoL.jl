@@ -12,7 +12,4 @@ union(d1::BitSet, d2::AnyDomain, domains...) = uniondomain(d1, domain(d2), domai
 ==(::AnyDomain, ::Missing) = missing
 ==(::Missing, ::AnyDomain) = missing
 
-convert(::Type{AffineMap}, m::AffineMap) = m
-convert(::Type{AffineMap{T}}, m::AffineMap{T}) where T = m
-
 end # module
