@@ -23,12 +23,7 @@ convert(::Type{Ref{T}}, x::QuasiCartesianIndex{1}) where {T} = RefValue{T}(x)::R
 
 @inline to_indices(A::AbstractQuasiArray, I::Tuple{}) = to_indices(A, axes(A), I)
 
-# this change happens at https://github.com/JuliaLang/julia/pull/45869
-@static if VERSION <= v"1.10.1"
-    to_indices(A::AbstractQuasiArray, ::Tuple{}, I::Union{Tuple{BitArray{N}}, Tuple{Array{Bool, N}}}) where N = (@_inline_meta; (to_index(A, I[1]), to_indices(A, (), tail(I))...))
-else
-    to_indices(A::AbstractQuasiArray, ::Tuple{}, I::Tuple{AbstractArray{Bool, N}, Vararg}) where N = (@_inline_meta; (to_index(A, I[1]), to_indices(A, (), tail(I))...))
-end
+to_indices(A::AbstractQuasiArray, ::Tuple{}, I::Union{Tuple{BitArray{N}}, Tuple{Array{Bool, N}}}) where N = (@_inline_meta; (to_index(A, I[1]), to_indices(A, (), tail(I))...))
 
 _to_subscript_indices(A::AbstractQuasiMatrix, J::Tuple, Jrem::Tuple) = J
 _to_subscript_indices(A::AbstractQuasiMatrix, J::Tuple, Jrem::Tuple{}) = __to_subscript_indices(A, axes(A), J, Jrem)
