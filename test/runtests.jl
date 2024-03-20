@@ -87,6 +87,10 @@ end
 end
 
 @testset "Extensions" begin
+    @testset "BlockArrays" begin
+        using BlockArrays
+        @test findblockindex(mortar(reshape([randn(2,2), randn(1,2), randn(2,3), randn(1,3)],2,2)),(2,3)) == BlockIndex((1,2),(2,1))
+    end
     @testset "IntervalSets" begin
         using DomainSets
         @test union(ChebyshevInterval()) ≡ ChebyshevInterval()

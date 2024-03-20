@@ -1,5 +1,13 @@
 module PTYQoLBlockArraysExt
 
+import BlockArrays: findblockindex, BlockIndex
+import Base.IteratorsMD: flatten
+
+function findblockindex(A::AbstractArray{T,N}, I::Tuple{Vararg{Integer,N}}) where {T,N}
+    blockinds = findblockindex.(axes(A), I)
+    BlockIndex(flatten(map(x->x.I, blockinds)), flatten(map(x->x.α, blockinds)))
+end
+
 # ambiguities
 import BlockArrays: BlockArray, to_axes, colsupport, rowsupport, PseudoBlockArray, _pseudo_reshape
 import Base: OneTo, similar, reshape
