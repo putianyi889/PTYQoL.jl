@@ -16,6 +16,7 @@ DomainSets = "5b8099bc-c8ec-5219-889f-1d9e522a28bf"
 InfiniteArrays = "4858937d-0d70-526a-a4dd-2d5cb5dd786c"
 Infinities = "e1ba4f0e-776d-440f-acd9-e1d2e9742647"
 IntervalSets = "8197267c-284f-5f27-9208-e0e47529a953"
+IrrationalConstants = "92d709cd-6900-40b7-9082-c6be49f344b6"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 QuasiArrays = "c4ea9172-b204-11e9-377d-29865faadc5c"
 
@@ -32,6 +33,7 @@ PTYQoLDomainSetsExt = "DomainSets"
 PTYQoLInfiniteArraysExt = "InfiniteArrays"
 PTYQoLInfinitiesExt = "Infinities"
 PTYQoLIntervalSetsExt = "IntervalSets"
+PTYQoLIrrationalConstantsExt = "IrrationalConstants"
 PTYQoLLinearAlgebraExt = "LinearAlgebra"
 PTYQoLQuasiArraysExt = "QuasiArrays"
 
@@ -46,4 +48,4 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test", "Aqua", "LinearAlgebra", "Documenter", "DomainSets", "ContinuumArrays", "ClassicalOrthogonalPolynomials", "ArrayLayouts", "AlgebraicNumbers", "Infinities", "BlockBandedMatrices", "BandedMatrices", "CircularArrays", "IntervalSets", "QuasiArrays", "InfiniteArrays", "BlockArrays", "BeepBeep"]
+test = ["Test", "Aqua", "LinearAlgebra", "Documenter", "DomainSets", "ContinuumArrays", "ClassicalOrthogonalPolynomials", "ArrayLayouts", "AlgebraicNumbers", "Infinities", "BlockBandedMatrices", "BandedMatrices", "CircularArrays", "IntervalSets", "IrrationalConstants", "QuasiArrays", "InfiniteArrays", "BlockArrays", "BeepBeep"]
