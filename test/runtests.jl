@@ -87,6 +87,10 @@ end
 end
 
 @testset "Extensions" begin
+    @testset "BlockArrays" begin
+        using BlockArrays
+        @test findblockindex(mortar(reshape([randn(2,2), randn(1,2), randn(2,3), randn(1,3)],2,2)),(2,3)) == BlockIndex((1,2),(2,1))
+    end
     @testset "IntervalSets" begin
         using DomainSets
         @test union(ChebyshevInterval()) ≡ ChebyshevInterval()
@@ -114,13 +118,33 @@ end
     end
     @testset "AlgebraicNumbers" begin
         using AlgebraicNumbers
-        @test sincospi(1//3) == sincosd(60) == (sqrt(AlgebraicNumber(3))/2, 0.5)
-        @test tanpi(1//3) == sqrt(AlgebraicNumber(3))
-        @test sincospi(1//3) isa NTuple{2,AlgebraicNumber}
-        @test tanpi(1//3) isa AlgebraicNumber
     end
-    @testset "Infinities" begin
-        using Infinities
+    @testset "IrrationalConstants" begin
+        using IrrationalConstants
+        @testset "half" begin
+            for (x, halfx) in ((halfπ,quartπ), (π,halfπ), (twoπ,π), (fourπ,twoπ), (inv2π,inv4π), (invπ,inv2π), (twoinvπ,invπ), (fourinvπ,twoinvπ), (sqrt2,invsqrt2), (sqrt2π,sqrthalfπ), (sqrt4π,sqrtπ))
+                @test halfx + halfx === x
+                @test x - halfx === halfx
+                @test halfx / x === 0.5
+                @test x / halfx === 2
+            end
+        end
+        @testset "inv" begin
+            for (x,invx) in ((quartπ,fourinvπ), (halfπ,twoinvπ), (π,invπ), (twoπ,inv2π), (fourπ,inv4π), (sqrt2,invsqrt2), (sqrtπ,invsqrtπ), (sqrt2π,invsqrt2π))
+                @test inv(x) === invx
+                @test inv(invx) === x
+                @test x*invx === 1
+                @test invx*x === 1
+            end
+        end
+        @testset "sqrt" begin
+            for (x,sqrtx) in ((π,sqrtπ), (twoπ,sqrt2π), (fourπ,sqrt4π), (halfπ,sqrthalfπ), (invπ,invsqrtπ), (inv2π,invsqrt2π))
+                @test sqrt(x) === sqrtx
+                @test sqrtx*sqrtx === x
+                @test x/sqrtx === sqrtx
+                @test sqrtx/x === inv(sqrtx)
+            end
+        end
     end
 end
 

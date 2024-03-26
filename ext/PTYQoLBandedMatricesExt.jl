@@ -1,7 +1,7 @@
 module PTYQoLBandedMatricesExt
 
-import BandedMatrices: inbands_getindex, inbands_setindex!, AbstractBandedMatrix, bandwidths, MemoryLayout, BandedLayout
-import Base: getindex, setindex!, @propagate_inbounds
+import BandedMatrices: inbands_getindex, inbands_setindex!, AbstractBandedMatrix, bandwidths, MemoryLayout, BandedLayout, BandedMatrix
+import Base: getindex, setindex!, @propagate_inbounds, convert
 
 # too tedious to test
 
@@ -28,5 +28,7 @@ end
         error("out of band.")
     end
 end
+
+convert(::Type{AbstractArray{T}}, M::BandedMatrix{T}) where T = M
 
 end
