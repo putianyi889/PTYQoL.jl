@@ -6,8 +6,8 @@ import Base: //
 //(x, y) = x / y
 
 import Base: eps, ceil, floor, precision
-eps(::Type{Complex{T}}) where T = eps(T)
-precision(::Type{Complex{T}}) where T = precision(T)
+eps(::Type{Complex{T}}) where {T} = eps(T)
+precision(::Type{Complex{T}}) where {T} = precision(T)
 ceil(z::Complex; args...) = ceil(real(z), args...) + ceil(imag(z), args...)im
 floor(z::Complex; args...) = floor(real(z), args...) + floor(imag(z), args...)im
 
@@ -22,24 +22,24 @@ endswith(a, b) = endswith(string(a), string(b))
 
 # https://github.com/JuliaLang/julia/pull/48894
 import Base: AbstractRange, AbstractArray
-AbstractRange{T}(r::AbstractRange) where T<:Real = T(first(r)):T(step(r)):T(last(r))
-AbstractArray{T,1}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
-AbstractArray{T}(r::AbstractRange) where T<:Real = AbstractRange{T}(r)
+AbstractRange{T}(r::AbstractRange) where {T<:Real} = T(first(r)):T(step(r)):T(last(r))
+AbstractArray{T,1}(r::AbstractRange) where {T<:Real} = AbstractRange{T}(r)
+AbstractArray{T}(r::AbstractRange) where {T<:Real} = AbstractRange{T}(r)
 AbstractRange{T}(r::AbstractUnitRange) where {T<:Integer} = AbstractUnitRange{T}(r)
 
 import Base: Fix2, Fix1, isone, ^, ∘, inv
 # problematic in terms of type consistency, but these are not supported by Base at all.
 for Fun in (Fix1, Fix2)
     @eval begin
-        ∘(f::$Fun{typeof(+)}, g::$Fun{typeof(+)}) = $Fun(+, f.x+g.x)
-        ∘(f::$Fun{typeof(*)}, g::$Fun{typeof(*)}) = $Fun(*, f.x*g.x)
-        ^(f::$Fun{typeof(+)}, p) = $Fun(+, f.x*p)
+        ∘(f::$Fun{typeof(+)}, g::$Fun{typeof(+)}) = $Fun(+, f.x + g.x)
+        ∘(f::$Fun{typeof(*)}, g::$Fun{typeof(*)}) = $Fun(*, f.x * g.x)
+        ^(f::$Fun{typeof(+)}, p) = $Fun(+, f.x * p)
         ^(f::$Fun{typeof(*)}, p) = $Fun(*, f.x^p)
         isone(f::$Fun{typeof(+)}) = iszero(f.x)
         isone(f::$Fun{typeof(*)}) = isone(f.x)
     end
 end
-∘(f::Fix2{typeof(^)}, g::Fix2{typeof(^)}) = Fix2(^, g.x*f.x)
+∘(f::Fix2{typeof(^)}, g::Fix2{typeof(^)}) = Fix2(^, g.x * f.x)
 ∘(::typeof(abs), ::typeof(abs)) = abs
 ∘(::typeof(identity), f::Function) = f
 ∘(f::Function, ::typeof(identity)) = f
@@ -76,7 +76,7 @@ import Base: copy
 copy(t::Tuple) = t
 
 import Base: Fix1, Fix2, +, -, *, /, //, show, Splat
-(t::NTuple{N, Function})(x...) where N = tuple((f(x...) for f in t)...)
+(t::NTuple{N,Function})(x...) where {N} = tuple((f(x...) for f in t)...)
 for op in (:+, :*, :-, :/, ://)
     @eval begin
         $op() = nothing # ambiguity
@@ -85,7 +85,7 @@ for op in (:+, :*, :-, :/, ://)
         $op(c::Number, f::Function) = Fix1($op, c) ∘ f
         show(io::IO, f::ComposedFunction{<:Fix1{typeof($op)}}) = print(io, '(', f.outer.x, $op, f.inner, ')')
         show(io::IO, f::ComposedFunction{<:Fix2{typeof($op)}}) = print(io, '(', f.inner, $op, f.outer.x, ')')
-        show(io::IO, f::ComposedFunction{Splat{typeof($op)}, <:Tuple{Function, Function}}) = print(io, '(', f.inner[1], $op, f.inner[2], ')')
+        show(io::IO, f::ComposedFunction{Splat{typeof($op)},<:Tuple{Function,Function}}) = print(io, '(', f.inner[1], $op, f.inner[2], ')')
     end
 end
 show(io::IO, f::ComposedFunction{<:Fix1}) = print(io, f.outer.f, '(', f.outer.x, ',', f.inner, ')')
@@ -101,7 +101,7 @@ show(io::IO, f::ComposedFunction{<:Fix2}) = print(io, f.outer.f, '(', f.inner, '
 import Base: mapreduce
 mapreduce(f, op) = f()
 
-import Base: searchsortedfirst
+import Base: searchsorted, searchsortedfirst, searchsortedlast
 function searchsortedfirst(v, x, lo::T, hi::T, o::Ordering)::keytype(v) where T<:Integer
     hi = hi + T(1)
     len = hi - lo
