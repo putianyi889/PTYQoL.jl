@@ -102,10 +102,45 @@ import Base: mapreduce
 mapreduce(f, op) = f()
 
 import Base: searchsortedfirst
-searchsortedfirst(::Tuple{}, k) = 1
-function searchsortedfirst(a::Tuple, k)
-    k ≤ first(a) && return 1
-    1 + searchsortedfirst(tail(a), k)
+function searchsortedfirst(v, x, lo::T, hi::T, o::Ordering)::keytype(v) where T<:Integer
+    hi = hi + T(1)
+    len = hi - lo
+    @inbounds while len != 0
+        half_len = len >>> 0x01
+        m = lo + half_len
+        if lt(o, v[m], x)
+            lo = m + 1
+            len -= half_len + 1
+        else
+            hi = m
+            len = half_len
+        end
+    end
+    return lo
+end
+
+function searchsortedlast(v, x, lo::T, hi::T, o::Ordering)::keytype(v) where T<:Integer
+    u = T(1)
+    lo = lo - u
+    hi = hi + u
+    @inbounds while lo < hi - u
+        m = midpoint(lo, hi)
+        if lt(o, x, v[m])
+            hi = m
+        else
+            lo = m
+        end
+    end
+    return lo
+end
+
+for s in [:searchsortedfirst, :searchsortedlast, :searchsorted]
+    @eval begin
+        $s(v, x, o::Ordering) = $s(v,x,firstindex(v),lastindex(v),o)
+        $s(v, x;
+           lt=isless, by=identity, rev::Union{Bool,Nothing}=nothing, order::Ordering=Forward) =
+            $s(v,x,ord(lt,by,rev,order))
+    end
 end
 
 end
