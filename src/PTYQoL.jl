@@ -101,4 +101,11 @@ show(io::IO, f::ComposedFunction{<:Fix2}) = print(io, f.outer.f, '(', f.inner, '
 import Base: mapreduce
 mapreduce(f, op) = f()
 
+import Base: searchsortedfirst
+searchsortedfirst(::Tuple{}, k) = 1
+function searchsortedfirst(a::Tuple, k)
+    k ≤ first(a) && return 1
+    1 + searchsortedfirst(tail(a), k)
+end
+
 end
