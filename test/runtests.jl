@@ -76,7 +76,7 @@ end
         v = cumsum(rand(10) .+ 1)
         t = Tuple(v)
         @test searchsorted(v, 0.5) == searchsorted(t, 0.5)
-        @test searchsortedfirst(v, 0.5) == searchsorted(t, 0.5)
+        @test searchsortedfirst(v, 0.5) == searchsortedfirst(t, 0.5)
         @test searchsortedlast(v, 0.5) == searchsortedlast(t, 0.5)
     end
 end
