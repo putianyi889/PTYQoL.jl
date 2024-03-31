@@ -134,6 +134,25 @@ function searchsortedlast(v, x, lo::T, hi::T, o::Ordering)::keytype(v) where T<:
     return lo
 end
 
+function searchsorted(v, x, ilo::T, ihi::T, o::Ordering)::UnitRange{keytype(v)} where T<:Integer
+    u = T(1)
+    lo = ilo - u
+    hi = ihi + u
+    @inbounds while lo < hi - u
+        m = midpoint(lo, hi)
+        if lt(o, v[m], x)
+            lo = m
+        elseif lt(o, x, v[m])
+            hi = m
+        else
+            a = searchsortedfirst(v, x, max(lo,ilo), m, o)
+            b = searchsortedlast(v, x, m, min(hi,ihi), o)
+            return a : b
+        end
+    end
+    return (lo + 1) : (hi - 1)
+end
+
 for s in [:searchsortedfirst, :searchsortedlast, :searchsorted]
     @eval begin
         $s(v, x, o::Ordering) = $s(v,x,firstindex(v),lastindex(v),o)
