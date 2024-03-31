@@ -6,18 +6,18 @@ using Test
         @test startswith(AbstractArray, "Abstract")
         @test endswith(AbstractArray, Array)
     end
-    
+
     @testset "https://github.com/JuliaLang/julia/pull/48894" begin
         @test AbstractRange{Float64}(1:10) ≡ AbstractVector{Float64}(1:10) ≡ AbstractArray{Float64}(1:10) ≡ 1.0:10
     end
-    
+
     @testset "https://github.com/JuliaLang/julia/pull/52312" begin
         using Base: front, tail
-        ind = CartesianIndex(1,2,3)
+        ind = CartesianIndex(1, 2, 3)
         @test first(ind) == 1
         @test last(ind) == ind[end] == 3
-        @test front(ind) == ind[1:end-1] == CartesianIndex(1,2)
-        @test tail(ind) == ind[2:end] == CartesianIndex(2,3)
+        @test front(ind) == ind[1:end-1] == CartesianIndex(1, 2)
+        @test tail(ind) == ind[2:end] == CartesianIndex(2, 3)
     end
 end
 
@@ -29,18 +29,20 @@ end
 
     @testset "dotu" begin
         using LinearAlgebra
-        u = rand(10); v = rand(10)
+        u = rand(10)
+        v = rand(10)
         @test LinearAlgebra.BLAS.dotu(u, v) == LinearAlgebra.BLAS.dotu(u, 1, v, 1) == LinearAlgebra.BLAS.dotu(10, u, 1, v, 1) ≈ u ⋅ v
 
-        u = rand(ComplexF64, 10); v = rand(ComplexF64, 10)
-        @test endswith(string(which(LinearAlgebra.BLAS.dotu, map(typeof,(10,u,1,v,1))).file), "blas.jl")
+        u = rand(ComplexF64, 10)
+        v = rand(ComplexF64, 10)
+        @test endswith(string(which(LinearAlgebra.BLAS.dotu, map(typeof, (10, u, 1, v, 1))).file), "blas.jl")
         @test LinearAlgebra.BLAS.dotu(u, v) == LinearAlgebra.BLAS.dotu(u, 1, v, 1) == LinearAlgebra.BLAS.dotu(10, u, 1, v, 1)
     end
 
     @testset "Complex interface" begin
         @test eps(ComplexF64) == eps(Float64)
         @test precision(ComplexF64) == precision(Float64)
-        @test ceil(0.5+0.5im) == 1+1im == floor(1.5+1.5im)
+        @test ceil(0.5 + 0.5im) == 1 + 1im == floor(1.5 + 1.5im)
     end
 
     @testset "front tail" begin
@@ -55,19 +57,27 @@ end
         @test abs ∘ abs ≡ abs
         @test inv(exp10 ∘ exp2) ≡ log2 ∘ log10
         @test Fix2(+, 0) == identity == Fix2(*, 1)
-    
+
         @test Fix2(+, 1) ∘ Fix2(+, 2) == Fix2(+, 3)
         @test Fix2(*, 2) ∘ Fix2(*, 3) == Fix2(*, 6)
-        @test Fix2(+, 3) ^ 5 == Fix2(+, 15)
-        @test Fix2(*, 4) ^ 3 == Fix2(*, 64)
+        @test Fix2(+, 3)^5 == Fix2(+, 15)
+        @test Fix2(*, 4)^3 == Fix2(*, 64)
         @test Fix2(^, 2) ∘ Fix2(^, 3) == Fix2(^, 6)
 
-        @test (sin+1)(1) ≈ 1+sin(1)
-        @test (2sin*cos)(1) ≈ sin(2)
+        @test (sin + 1)(1) ≈ 1 + sin(1)
+        @test (2sin * cos)(1) ≈ sin(2)
     end
 
     @testset "Tuple copy" begin
-        @test copy((1,2)) ≡ (1,2)
+        @test copy((1, 2)) ≡ (1, 2)
+    end
+
+    @testset "searchsorted" begin
+        v = cumsum(rand(10) .+ 1)
+        t = Tuple(v)
+        @test searchsorted(v, 0.5) == searchsorted(t, 0.5)
+        @test searchsortedfirst(v, 0.5) == searchsortedfirst(t, 0.5)
+        @test searchsortedlast(v, 0.5) == searchsortedlast(t, 0.5)
     end
 end
 
@@ -89,7 +99,7 @@ end
 @testset "Extensions" begin
     @testset "BlockArrays" begin
         using BlockArrays
-        @test findblockindex(mortar(reshape([randn(2,2), randn(1,2), randn(2,3), randn(1,3)],2,2)),(2,3)) == BlockIndex((1,2),(2,1))
+        @test findblockindex(mortar(reshape([randn(2, 2), randn(1, 2), randn(2, 3), randn(1, 3)], 2, 2)), (2, 3)) == BlockIndex((1, 2), (2, 1))
     end
     @testset "IntervalSets" begin
         using DomainSets
@@ -97,24 +107,24 @@ end
     end
     @testset "QuasiArrays" begin
         using ContinuumArrays
-        @test union(Inclusion(0..1).^2) == Inclusion(0..1) == union(Inclusion(-1..1).^1.0) == union(Inclusion(1..Inf).^(-0.5))
-        @test isempty(union(Inclusion(-1..0).^1.5))
-        @test union(Inclusion(0..1).^0) == Inclusion(1..1)
+        @test union(Inclusion(0 .. 1) .^ 2) == Inclusion(0 .. 1) == union(Inclusion(-1 .. 1) .^ 1.0) == union(Inclusion(1 .. Inf) .^ (-0.5))
+        @test isempty(union(Inclusion(-1 .. 0) .^ 1.5))
+        @test union(Inclusion(0 .. 1) .^ 0) == Inclusion(1 .. 1)
     end
     @testset "ClassicalOrthogonalPolynomials" begin
         using ClassicalOrthogonalPolynomials
         using ClassicalOrthogonalPolynomials: AbstractJacobi
-        @test AbstractJacobi{Float32}(Jacobi(1,1)) isa Jacobi{Float32}
+        @test AbstractJacobi{Float32}(Jacobi(1, 1)) isa Jacobi{Float32}
         @test AbstractJacobi{Float16}(ChebyshevU()) isa ChebyshevU{Float16}
         @test AbstractJacobi{BigFloat}(Legendre()) isa Legendre{BigFloat}
         @test AbstractJacobi{Float32}(Ultraspherical(2)) isa Ultraspherical{Float32}
     end
     @testset "ArrayLayouts" begin
         using ArrayLayouts
-        A = rand(3,5)
-        ind = CartesianIndex(2,3)
-        @test rowsupport(A, ind) == rowsupport(A,2)
-        @test colsupport(A, ind) == colsupport(A,3)
+        A = rand(3, 5)
+        ind = CartesianIndex(2, 3)
+        @test rowsupport(A, ind) == rowsupport(A, 2)
+        @test colsupport(A, ind) == colsupport(A, 3)
     end
     @testset "AlgebraicNumbers" begin
         using AlgebraicNumbers
@@ -122,7 +132,7 @@ end
     @testset "IrrationalConstants" begin
         using IrrationalConstants
         @testset "half" begin
-            for (x, halfx) in ((halfπ,quartπ), (π,halfπ), (twoπ,π), (fourπ,twoπ), (inv2π,inv4π), (invπ,inv2π), (twoinvπ,invπ), (fourinvπ,twoinvπ), (sqrt2,invsqrt2), (sqrt2π,sqrthalfπ), (sqrt4π,sqrtπ))
+            for (x, halfx) in ((halfπ, quartπ), (π, halfπ), (twoπ, π), (fourπ, twoπ), (inv2π, inv4π), (invπ, inv2π), (twoinvπ, invπ), (fourinvπ, twoinvπ), (sqrt2, invsqrt2), (sqrt2π, sqrthalfπ), (sqrt4π, sqrtπ))
                 @test halfx + halfx === x
                 @test x - halfx === halfx
                 @test halfx / x === 0.5
@@ -130,19 +140,19 @@ end
             end
         end
         @testset "inv" begin
-            for (x,invx) in ((quartπ,fourinvπ), (halfπ,twoinvπ), (π,invπ), (twoπ,inv2π), (fourπ,inv4π), (sqrt2,invsqrt2), (sqrtπ,invsqrtπ), (sqrt2π,invsqrt2π))
+            for (x, invx) in ((quartπ, fourinvπ), (halfπ, twoinvπ), (π, invπ), (twoπ, inv2π), (fourπ, inv4π), (sqrt2, invsqrt2), (sqrtπ, invsqrtπ), (sqrt2π, invsqrt2π))
                 @test inv(x) === invx
                 @test inv(invx) === x
-                @test x*invx === 1
-                @test invx*x === 1
+                @test x * invx === 1
+                @test invx * x === 1
             end
         end
         @testset "sqrt" begin
-            for (x,sqrtx) in ((π,sqrtπ), (twoπ,sqrt2π), (fourπ,sqrt4π), (halfπ,sqrthalfπ), (invπ,invsqrtπ), (inv2π,invsqrt2π))
+            for (x, sqrtx) in ((π, sqrtπ), (twoπ, sqrt2π), (fourπ, sqrt4π), (halfπ, sqrthalfπ), (invπ, invsqrtπ), (inv2π, invsqrt2π))
                 @test sqrt(x) === sqrtx
-                @test sqrtx*sqrtx === x
-                @test x/sqrtx === sqrtx
-                @test sqrtx/x === inv(sqrtx)
+                @test sqrtx * sqrtx === x
+                @test x / sqrtx === sqrtx
+                @test sqrtx / x === inv(sqrtx)
             end
         end
     end
@@ -151,12 +161,12 @@ end
 using Documenter
 DocMeta.setdocmeta!(PTYQoL, :DocTestSetup, :(using PTYQoL); recursive=true)
 @testset "Docs" begin
-	doctest(PTYQoL)
+    doctest(PTYQoL)
 end
 
 using Aqua
 @testset "Project quality" begin
-    using PTYQoL, AlgebraicNumbers, ArrayLayouts, BandedMatrices, BlockBandedMatrices, CircularArrays, ClassicalOrthogonalPolynomials, ContinuumArrays, DomainSets, InfiniteArrays, Infinities, IntervalSets, LinearAlgebra, QuasiArrays, BlockArrays 
+    using PTYQoL, AlgebraicNumbers, ArrayLayouts, BandedMatrices, BlockBandedMatrices, CircularArrays, ClassicalOrthogonalPolynomials, ContinuumArrays, DomainSets, InfiniteArrays, Infinities, IntervalSets, LinearAlgebra, QuasiArrays, BlockArrays
     Aqua.test_all(PTYQoL, ambiguities=false, piracies=false, deps_compat=false)
 
     ambi = detect_ambiguities(Base, PTYQoL, AlgebraicNumbers, ArrayLayouts, BandedMatrices, BlockBandedMatrices, CircularArrays, ClassicalOrthogonalPolynomials, ContinuumArrays, DomainSets, InfiniteArrays, Infinities, IntervalSets, LinearAlgebra, QuasiArrays, BlockArrays)
