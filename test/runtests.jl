@@ -195,7 +195,7 @@ using Aqua
         for m in extension
             display(m[1])
             display(m[2])
-            Aqua.ambiguity_hint(m...)
+            Aqua.ambiguity_hint(stdout, m...)
             print("\n\n\n")
         end
         println("There are $(length(extension)) ambiguities that can be solved by extension.")
