@@ -9,7 +9,7 @@ function findblockindex(A::AbstractArray{T,N}, I::Tuple{Vararg{Integer,N}}) wher
 end
 
 # ambiguities
-import BlockArrays: BlockArray, to_axes, colsupport, rowsupport, BlockedArray, _pseudo_reshape
+import BlockArrays: BlockArray, to_axes, colsupport, rowsupport, BlockedArray, _blocked_reshape
 import Base: OneTo, similar, reshape
 
 @inline similar(::BlockArray, ::Type{T}, axes::Tuple{Union{Integer, OneTo}, Vararg{Union{Integer, OneTo}}}) where T = BlockArray{T}(undef, map(to_axes,axes))
