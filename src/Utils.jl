@@ -192,6 +192,10 @@ macro struct_map(TYP, ops...)
     end)
 end
 
+export indent
+indent(s::AbstractString, t::AbstractString) = t*replace(s, "\n" => "\n"*t)
+indent(s::AbstractString, k::Integer) = indent(s, repeat(' ', k))
+
 import Base: Fix1, show, string
 export ln
 """
@@ -246,8 +250,8 @@ julia> fracpochhammer(1, 2, 0.5, 1, 3) # (1 * 1.5 * 2) / (2 * 3 * 4)
 0.125
 ```
 """
-fracpochhammer(a,b,n) = prod(x/y for (x,y) in zip(range(a,length=n),range(b,length=n)))
-fracpochhammer(a,b,stepa,stepb,n) = prod(x/y for (x,y) in zip(range(a,step=stepa,length=n),range(b,step=stepb,length=n)))
+fracpochhammer(a,b,n) = prod((x/y for (x,y) in zip(range(a,length=n),range(b,length=n))), init=1)
+fracpochhammer(a,b,stepa,stepb,n) = prod((x/y for (x,y) in zip(range(a,step=stepa,length=n),range(b,step=stepb,length=n))), init=1)
 
 const TupleN{T,N} = Tuple{Vararg{T,N}}
 const Tuple1N{T,N} = Tuple{T, Vararg{T,N}}

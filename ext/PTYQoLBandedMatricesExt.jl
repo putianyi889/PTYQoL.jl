@@ -29,6 +29,4 @@ end
     end
 end
 
-convert(::Type{AbstractArray{T}}, M::BandedMatrix{T}) where T = M
-
 end
