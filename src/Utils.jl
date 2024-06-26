@@ -192,6 +192,10 @@ macro struct_map(TYP, ops...)
     end)
 end
 
+export indent
+indent(s::AbstractString, t::AbstractString) = t*replace(s, "\n" => "\n"*t)
+indent(s::AbstractString, k::Integer) = indent(s, repeat(' ', k))
+
 import Base: Fix1, show, string
 export ln
 """
