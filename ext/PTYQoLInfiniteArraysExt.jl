@@ -2,7 +2,7 @@ module PTYQoLInfiniteArraysExt
 
 # ambiguities
 import InfiniteArrays: RealInfinity, PosInfinity, ℵ₀, InfiniteCardinal
-import Base: Colon, getindex, OverflowSafe, (:), getindex, OneTo, unitrange_last
+import Base: Colon, getindex, OverflowSafe, (:), getindex, OneTo, unitrange_last, _sub2ind_recurse
 
 (:)(start::RealInfinity, step::AbstractFloat, stop::RealInfinity) = (:)(promote(start, step)..., stop)
 (:)(::PosInfinity, ::AbstractFloat, ::PosInfinity) = throw(ArgumentError("Cannot create range starting at infinity"))
@@ -22,5 +22,10 @@ function getindex(x::OneTo{T}, y::InfiniteCardinal{0}) where T
 end
 
 unitrange_last(::Integer, ::InfiniteCardinal{0}) = ∞
+
+function _sub2ind_recurse(::Tuple{}, L::InfiniteCardinal{0}, ind, i::Integer, I::Vararg{Integer})
+    @inline
+    _sub2ind_recurse((), L, ind+(i-1)*L, I...)
+end
 
 end # module
