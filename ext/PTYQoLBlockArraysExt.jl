@@ -18,7 +18,6 @@ import Base: OneTo, similar, reshape
 rowsupport(A::BlockedArray, i::CartesianIndex{2}) = rowsupport(A, first(i))
 colsupport(A::BlockedArray, i::CartesianIndex{2}) = colsupport(A, last(i))
 
-reshape(block_array::BlockedArray, axes::Tuple{}) = _pseudo_reshape(block_array, axes)
 reshape(block_array::BlockVector, dims::Tuple{Colon}) = reshape(BlockedArray(block_array), dims)
 reshape(block_array::BlockArray, dims::Tuple{Vararg{Int}}) = reshape(BlockedArray(block_array), dims)
 reshape(block_array::BlockArray, dims::Tuple{Integer, Vararg{Integer}}) = reshape(BlockedArray(block_array), dims)
