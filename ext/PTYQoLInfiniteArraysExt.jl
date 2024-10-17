@@ -12,7 +12,7 @@ function getindex(x::UnitRange{<:OverflowSafe}, y::InfiniteCardinal{0})
     isinf(length(x)) || throw(BoundsError(x,y))
     ℵ₀
 end
-function getindex(x::UnitRange, y::InfiniteCardinal{0})
+function getindex(x::UnitRange{T}, y::InfiniteCardinal{0}) where T
     isinf(length(x)) || throw(BoundsError(x,y))
     ℵ₀
 end
