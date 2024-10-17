@@ -21,6 +21,5 @@ colsupport(A::BlockedArray, i::CartesianIndex{2}) = colsupport(A, last(i))
 reshape(block_array::BlockVector, dims::Tuple{Colon}) = reshape(BlockedArray(block_array), dims)
 reshape(block_array::BlockArray, dims::Tuple{Vararg{Int}}) = reshape(BlockedArray(block_array), dims)
 reshape(block_array::BlockArray, dims::Tuple{Integer, Vararg{Integer}}) = reshape(BlockedArray(block_array), dims)
-reshape(block_array::BlockArray, dims::Tuple{}) = reshape(BlockedArray(block_array), dims)
 
 end # module
