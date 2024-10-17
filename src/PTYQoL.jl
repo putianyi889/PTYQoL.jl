@@ -102,7 +102,6 @@ import Base: mapreduce
 mapreduce(f, op) = f()
 
 import Base: searchsorted, searchsortedfirst, searchsortedlast, Ordering, Forward, ord, keytype, midpoint, lt
-keytype(::Tuple) = Int
 
 function searchsortedfirst(v, x, lo::T, hi::T, o::Ordering)::keytype(v) where T<:Integer
     hi = hi + T(1)
