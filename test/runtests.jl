@@ -9,6 +9,7 @@ using Test
 
     @testset "https://github.com/JuliaLang/julia/pull/48894" begin
         @test AbstractRange{Float64}(1:10) ≡ AbstractVector{Float64}(1:10) ≡ AbstractArray{Float64}(1:10) ≡ 1.0:10
+        @test AbstractArray{Float64}(0*(1:10)) ≡ range(0.0,0.0,10)
     end
 
     @testset "https://github.com/JuliaLang/julia/pull/52312" begin

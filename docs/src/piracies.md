@@ -1,6 +1,6 @@
-## Type piracies
+# Type piracies
 
-### Extended support on `Complex`
+## `Complex` supports `eps`, `precision`, `ceil` and `floor`
 ```jldoctest
 julia> eps(1.0+im)
 2.220446049250313e-16
@@ -14,3 +14,5 @@ julia> ceil(0.5+0.5im)
 julia> floor(0.5+0.5im)
 0.0 + 0.0im
 ```
+
+##
