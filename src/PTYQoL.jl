@@ -7,7 +7,9 @@ import Base: //
 
 import Base: eps, ceil, floor, precision
 eps(::Type{Complex{T}}) where {T} = eps(T)
+eps(::Complex{T}) where T = eps(Complex{T})
 precision(::Type{Complex{T}}) where {T} = precision(T)
+precision(::Complex{T}) where T = precision(Complex{T})
 ceil(z::Complex; args...) = ceil(real(z), args...) + ceil(imag(z), args...)im
 floor(z::Complex; args...) = floor(real(z), args...) + floor(imag(z), args...)im
 
