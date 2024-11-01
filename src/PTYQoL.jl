@@ -4,6 +4,8 @@ include("Utils.jl")
 
 import Base: //
 //(x, y) = x / y
+# https://github.com/JuliaLang/julia/issues/52870
+//(A::AbstractMatrix{<:Integer}, B::AbstractMatrix{<:Integer}) = (A//one(eltype(A))) / (B//one(eltype(B)))
 
 import Base: eps, ceil, floor, precision
 eps(::Type{Complex{T}}) where {T} = eps(T)

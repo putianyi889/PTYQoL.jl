@@ -33,6 +33,17 @@ using Test
         @test front(ind) == ind[1:end-1] == CartesianIndex(1, 2)
         @test tail(ind) == ind[2:end] == CartesianIndex(2, 3)
     end
+
+    @testset "https://github.com/JuliaLang/julia/issues/52870" begin
+        using LinearAlgebra
+        A = rand(1:9, 3, 3)
+        B = rand(1:9, 3, 3)
+        while det(B) == 0
+            B = rand(1:9, 3, 3)
+        end
+        C = A // B
+        @test C * B == A
+    end
 end
 
 @testset "Misc" begin
