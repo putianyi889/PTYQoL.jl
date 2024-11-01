@@ -9,7 +9,7 @@ function findblockindex(A::AbstractArray{T,N}, I::Tuple{Vararg{Integer,N}}) wher
 end
 
 # ambiguities
-import BlockArrays: BlockArray, to_axes, colsupport, rowsupport, BlockedArray, _blocked_reshape
+import BlockArrays: BlockArray, to_axes, colsupport, rowsupport, BlockedArray, _blocked_reshape, BlockVector
 import Base: OneTo, similar, reshape
 
 @inline similar(::BlockArray, ::Type{T}, axes::Tuple{Union{Integer, OneTo}, Vararg{Union{Integer, OneTo}}}) where T = BlockArray{T}(undef, map(to_axes,axes))
@@ -18,8 +18,8 @@ import Base: OneTo, similar, reshape
 rowsupport(A::BlockedArray, i::CartesianIndex{2}) = rowsupport(A, first(i))
 colsupport(A::BlockedArray, i::CartesianIndex{2}) = colsupport(A, last(i))
 
-reshape(block_array::BlockedArray, axes::Tuple{}) = _pseudo_reshape(block_array, axes)
+reshape(block_array::BlockVector, dims::Tuple{Colon}) = reshape(BlockedArray(block_array), dims)
 reshape(block_array::BlockArray, dims::Tuple{Vararg{Int}}) = reshape(BlockedArray(block_array), dims)
-reshape(block_array::BlockArray, dims::Tuple{}) = reshape(BlockedArray(block_array), dims)
+reshape(block_array::BlockArray, dims::Tuple{Integer, Vararg{Integer}}) = reshape(BlockedArray(block_array), dims)
 
 end # module

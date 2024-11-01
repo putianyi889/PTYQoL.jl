@@ -22,8 +22,15 @@ convert(::Type{T}, index::QuasiCartesianIndex{1}) where {T>:Union{Missing, Nothi
 convert(::Type{Ref{T}}, x::QuasiCartesianIndex{1}) where {T} = RefValue{T}(x)::RefValue{T}
 
 @inline to_indices(A::AbstractQuasiArray, I::Tuple{}) = to_indices(A, axes(A), I)
+@inline to_indices(A::AbstractQuasiArray, I::Tuple{AbstractArray{Bool}}) = to_indices(A, axes(A), I)
 
 to_indices(A::AbstractQuasiArray, ::Tuple{}, I::Union{Tuple{BitArray{N}}, Tuple{Array{Bool, N}}}) where N = (@_inline_meta; (to_index(A, I[1]), to_indices(A, (), tail(I))...))
+to_indices(A::AbstractQuasiArray, ::Tuple{}, I::Tuple{AbstractArray{CartesianIndex{N}}, Vararg}) where N = (@_inline_meta; (to_index(A, I[1]), to_indices(A, (), tail(I))...))
+to_indices(A::AbstractQuasiArray, ::Tuple{}, I::Tuple{AbstractArray{Bool, N}, Vararg}) where N = (@_inline_meta; (to_index(A, I[1]), to_indices(A, (), tail(I))...))
+to_indices(A::AbstractQuasiArray, ::Tuple{}, I::Tuple{CartesianIndex{N}, Vararg}) where N = (@_inline_meta; (to_index(A, I[1]), to_indices(A, (), tail(I))...))
+to_indices(A::AbstractQuasiArray, inds, I::Tuple{AbstractArray{CartesianIndex{N}}, Vararg}) where N = (@_inline_meta; (to_quasi_index(A, eltype(inds[1]), I[1]), to_indices(A, _cutdim(inds, I[1]), tail(I))...))
+to_indices(A::AbstractQuasiArray, ::Tuple{}, I::Tuple{Colon, Vararg}) = (@_inline_meta; (to_index(A, I[1]), to_indices(A, (), tail(I))...))
+to_indices(A::AbstractQuasiArray, inds, I::Tuple{AbstractArray{Bool, N}, Vararg}) where N = (@_inline_meta; (to_quasi_index(A, eltype(inds[1]), I[1]), to_indices(A, _cutdim(inds, I[1]), tail(I))...))
 
 _to_subscript_indices(A::AbstractQuasiMatrix, J::Tuple, Jrem::Tuple) = J
 _to_subscript_indices(A::AbstractQuasiMatrix, J::Tuple, Jrem::Tuple{}) = __to_subscript_indices(A, axes(A), J, Jrem)
