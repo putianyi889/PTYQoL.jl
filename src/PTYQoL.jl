@@ -23,12 +23,16 @@ startswith(a, b) = startswith(string(a), string(b))
 endswith(a, b) = endswith(string(a), string(b))
 
 # https://github.com/JuliaLang/julia/pull/48894
-import Base: AbstractRange, AbstractArray
-AbstractRange{T}(r::AbstractRange) where {T} = T(first(r)):T(step(r)):T(last(r))
-AbstractArray{T,1}(r::AbstractRange) where {T} = AbstractRange{T}(r)
-AbstractArray{T}(r::AbstractRange) where {T} = AbstractRange{T}(r)
-AbstractRange{T}(r::AbstractUnitRange) where {T<:Integer} = AbstractUnitRange{T}(r)
-AbstractRange{T}(r::StepRangeLen) where {T} = StepRangeLen{T}(r)
+import Base: AbstractRange, AbstractArray, OrdinalRange
+AbstractRange{T}(r::AbstractRange) where T = range(T(first(r)), T(last(r)), length(r))
+AbstractRange{T}(r::OrdinalRange) where T<:Integer = OrdinalRange{T}(r) # float should fall back to StepRangeLen
+AbstractRange{T}(r::OrdinalRange) where T<:Rational = OrdinalRange{T}(r)
+AbstractRange{T}(r::StepRangeLen) where T = StepRangeLen{T}(r)
+AbstractRange{T}(r::LinRange) where T = LinRange{T}(r)
+AbstractArray{T,1}(r::AbstractRange) where T = AbstractRange{T}(r)
+AbstractArray{T}(r::AbstractRange) where T = AbstractRange{T}(r)
+OrdinalRange{T}(r::OrdinalRange{R,S}) where {T, R, S} = OrdinalRange{T, promote_type(T,S)}(r) # type of step matters
+OrdinalRange{T}(r::AbstractUnitRange) where T = AbstractUnitRange{T}(r) # not in this case
 
 import Base: Fix2, Fix1, isone, ^, ∘, inv
 # problematic in terms of type consistency, but these are not supported by Base at all.

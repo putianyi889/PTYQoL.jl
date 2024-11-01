@@ -8,8 +8,21 @@ using Test
     end
 
     @testset "https://github.com/JuliaLang/julia/pull/48894" begin
-        @test AbstractRange{Float64}(1:10) ≡ AbstractVector{Float64}(1:10) ≡ AbstractArray{Float64}(1:10) ≡ 1.0:10
-        @test AbstractArray{Float64}(0*(1:10)) ≡ range(0.0,0.0,10)
+        # StepRangeLen is converted to StepRangeLen
+        @test 0.0:5.0 isa StepRangeLen # just in case
+        @test convert(AbstractRange{Int}, 0.0:5.0) === convert(AbstractVector{Int}, 0.0:5.0) === convert(AbstractArray{Int}, 0.0:5.0) === StepRangeLen(0, 1, 6)
+        @test convert(AbstractRange{Float16}, 0.0:5.0) === convert(AbstractVector{Float16}, 0.0:5.0) === convert(AbstractArray{Float16}, 0.0:5.0) === Float16(0.0):Float16(5.0)
+
+        # Try to preserve type when possible
+        @test AbstractArray{Int8}(Base.oneto(5)) === Base.oneto(Int8(5)) # OneTo
+        @test AbstractArray{Int32}(0:5) === Int32(0):Int32(5) # UnitRange
+        @test AbstractArray{Int128}(0:2:5) === Int128(0):Int128(2):4 # StepRange
+        @test AbstractArray{Float64}(LinRange(1, 5, 5)) === LinRange(1.0, 5.0, 5) # LinRange
+        @test AbstractArray{Float64}(Base.oneto(5)) === AbstractArray{Float64}(1:5) === AbstractArray{Float64}(1:1:5) === 1.0:1.0:5.0 # fallback
+
+        # Edge cases where floating point can be glitchy. Credit: @mcabbott
+        @test convert(AbstractArray{Float64}, 0 * (1:10)) === range(0.0, 0.0, 10)
+        @test length(convert(AbstractArray{Float16}, range(1 / 43^2, 1, 43))) == 43
     end
 
     @testset "https://github.com/JuliaLang/julia/pull/52312" begin
