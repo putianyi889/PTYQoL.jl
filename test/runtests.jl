@@ -218,7 +218,7 @@ using Aqua
         for m in internal
             display(m[1])
             display(m[2])
-            Aqua.ambiguity_hint(m...)
+            Aqua.ambiguity_hint(stdout, m...)
             print("\n\n\n")
         end
         @test length(internal) == 0
