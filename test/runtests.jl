@@ -48,10 +48,11 @@ using Test
     @testset "https://github.com/JuliaLang/julia/pull/56433" begin
         using Base: TwicePrecision
         @test isapprox(Float64(π - Float32(π)) + Float32(π), Float64(π), rtol=1e-14)
-        @test -π+π != 0
+        @test -π + π != 0
+        @test Float16(1):π:100 isa StepRangeLen{Float16,Float64,Float64,Int}
         @test 1:π:100 isa StepRangeLen{Float64,Base.TwicePrecision{Float64},Base.TwicePrecision{Float64},Int}
         @test length(1:π:-1) == 0
-        @test length(1:π:2) == 1
+        @test length(1:π:1) == 1
     end
 end
 
@@ -114,7 +115,7 @@ end
         @test searchsortedlast(v, 0.5) == searchsortedlast(t, 0.5)
     end
 
-    
+
 end
 
 @testset "Utils" begin
