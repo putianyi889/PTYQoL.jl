@@ -44,6 +44,16 @@ using Test
         C = A // B
         @test C * B == A
     end
+
+    @testset "https://github.com/JuliaLang/julia/pull/56433" begin
+        using Base: TwicePrecision
+        @test isapprox(Float64(π - Float32(π)) + Float32(π), Float64(π), rtol=1e-14)
+        @test -π + π != 0
+        @test Float16(1):π:100 isa StepRangeLen{Float16,Float64,Float64,Int}
+        @test 1:π:100 isa StepRangeLen{Float64,Base.TwicePrecision{Float64},Base.TwicePrecision{Float64},Int}
+        @test length(1:π:-1) == 0
+        @test length(1:π:1) == 1
+    end
 end
 
 @testset "Misc" begin
@@ -104,6 +114,8 @@ end
         @test searchsortedfirst(v, 0.5) == searchsortedfirst(t, 0.5)
         @test searchsortedlast(v, 0.5) == searchsortedlast(t, 0.5)
     end
+
+
 end
 
 @testset "Utils" begin
@@ -212,7 +224,7 @@ using Aqua
         for m in internal
             display(m[1])
             display(m[2])
-            Aqua.ambiguity_hint(m...)
+            Aqua.ambiguity_hint(stdout, m...)
             print("\n\n\n")
         end
         @test length(internal) == 0
