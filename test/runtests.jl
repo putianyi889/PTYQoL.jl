@@ -104,6 +104,12 @@ end
         @test searchsortedfirst(v, 0.5) == searchsortedfirst(t, 0.5)
         @test searchsortedlast(v, 0.5) == searchsortedlast(t, 0.5)
     end
+
+    @testset "Irrationals" begin
+        using Base: TwicePrecision
+        @test isapprox(Float64(π - Float32(π)) + Float32(π), Float64(π), rtol=1e-14)
+        @test 1:π:100 isa StepRangeLen{Float64,Base.TwicePrecision{Float64},Base.TwicePrecision{Float64},Int}
+    end
 end
 
 @testset "Utils" begin

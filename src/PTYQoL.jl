@@ -172,4 +172,49 @@ for s in [:searchsortedfirst, :searchsortedlast, :searchsorted]
     end
 end
 
+# https://github.com/JuliaLang/julia/pull/56433
+import Base: (:), +, -, TwicePrecision, zero, IEEEFloat
+zero(::TwicePrecision{T}) where {T} = TwicePrecision(zero(T))
+TwicePrecision(x::AbstractIrrational) = TwicePrecision{Float64}(x)
+for op in (:+, :-)
+    for (prec, twiceprec) in ((Float16, Float32), (Float32, Float64))
+        @eval $op(a::AbstractIrrational, b::$prec) = $prec($op($twiceprec(a), b))
+        @eval $op(a::$prec, b::AbstractIrrational) = $prec($op(a, $twiceprec(b)))
+    end
+    @eval function $op(a::AbstractIrrational, b::T) where {T<:AbstractFloat}
+        o = precision(BigFloat)
+        setprecision(BigFloat, 2 * precision(b) + 1)
+        ret = $op(BigFloat(a), b)
+        setprecision(BigFloat, o)
+        T(ret)
+    end
+    @eval function $op(a::T, b::AbstractIrrational) where {T<:AbstractFloat}
+        o = precision(BigFloat)
+        setprecision(BigFloat, 2 * precision(a) + 1)
+        ret = $op(a, BigFloat(b))
+        setprecision(BigFloat, o)
+        T(ret)
+    end
 end
+steprangelen_irrational(::Type{T}, ref::T, step::AbstractIrrational, len::Integer, offset::Integer) where {T<:IEEEFloat} = StepRangeLen{T}(Float64(ref), Float64(step), len, offset)
+steprangelen_irrational(::Type{Float64}, ref::T, step::AbstractIrrational, len::Integer, offset::Integer) where {T<:IEEEFloat} = StepRangeLen{T}(TwicePrecision(ref), TwicePrecision(step), len, offset)
+function (:)(a::T, b::AbstractIrrational, c::T) where {T<:Real}
+    elT = promote_type(T, typeof(b))
+    elT(a):b:elT(c)
+end
+function (:)(start::T, step::AbstractIrrational, stop::T) where {T<:AbstractFloat}
+    lf = (stop - start) / step
+    if lf < 0
+        len = 0
+    elseif lf == 0
+        len = 1
+    else
+        len = round(Int, lf) + 1
+        stop′ = start + (len - 1) * step
+        # if we've overshot the end, subtract one:
+        len -= (start < stop < stop′) + (start > stop > stop′)
+    end
+    steprangelen_irrational(T, start, step, len, 1)
+end
+
+end # module
