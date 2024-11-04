@@ -108,7 +108,10 @@ end
     @testset "Irrationals" begin
         using Base: TwicePrecision
         @test isapprox(Float64(π - Float32(π)) + Float32(π), Float64(π), rtol=1e-14)
+        @test -π+π != 0
         @test 1:π:100 isa StepRangeLen{Float64,Base.TwicePrecision{Float64},Base.TwicePrecision{Float64},Int}
+        @test len(1:π:-1) == 0
+        @test len(1:π:2) == 1
     end
 end
 
