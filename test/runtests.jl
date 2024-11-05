@@ -47,7 +47,13 @@ using Test
 
     @testset "https://github.com/JuliaLang/julia/pull/56433" begin
         using Base: TwicePrecision
-        @test isapprox(Float64(π - Float32(π)) + Float32(π), Float64(π), rtol=1e-14)
+        using Base.MathConstants
+        for i in (π, ℯ, γ, catalan)
+            @test isapprox(Float32(i - Float16(i)) + Float16(i), Float32(i), rtol=1e-6)
+            @test isapprox(Float64(i - Float32(i)) + Float32(i), Float64(i), rtol=1e-14)
+            @test isapprox(BigFloat(i - Float64(i)) + Float64(i), BigFloat(i), rtol=1e-30)
+            @test abs(i-BigFloat(i)) ≥ 0.1*eps(BigFloat)
+        end
         @test -π + π != 0
         @test Float16(1):π:100 isa StepRangeLen{Float16,Float64,Float64,Int}
         @test 1:π:100 isa StepRangeLen{Float64,Base.TwicePrecision{Float64},Base.TwicePrecision{Float64},Int}
