@@ -39,6 +39,7 @@ PTYQoLQuasiArraysExt = "QuasiArrays"
 
 [compat]
 CircularArrays = "1"
+ClassicalOrthogonalPolynomials = "0.13"
 QuasiArrays = "0.11"
 julia = "1"
 
