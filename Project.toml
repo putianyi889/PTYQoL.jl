@@ -38,6 +38,7 @@ PTYQoLLinearAlgebraExt = "LinearAlgebra"
 PTYQoLQuasiArraysExt = "QuasiArrays"
 
 [compat]
+AlgebraicNumbers = "0.1"
 ArrayLayouts = "1"
 BlockBandedMatrices = "0.13"
 CircularArrays = "1"
