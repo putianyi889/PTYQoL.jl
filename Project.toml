@@ -38,6 +38,7 @@ PTYQoLLinearAlgebraExt = "LinearAlgebra"
 PTYQoLQuasiArraysExt = "QuasiArrays"
 
 [compat]
+InfiniteArrays = "0.14"
 julia = "1"
 
 [extras]
