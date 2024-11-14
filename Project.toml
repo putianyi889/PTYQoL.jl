@@ -40,6 +40,7 @@ PTYQoLQuasiArraysExt = "QuasiArrays"
 [compat]
 AlgebraicNumbers = "0.1"
 ArrayLayouts = "1"
+BandedMatrices = "1"
 BlockArrays = "1"
 BlockBandedMatrices = "0.13"
 CircularArrays = "1"
