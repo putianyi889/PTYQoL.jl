@@ -1,6 +1,8 @@
 # PTY-QoL (PTY's Quality of Life package)
 
 [![Build Status](https://github.com/putianyi889/PTY-QoL.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/putianyi889/PTY-QoL.jl/actions/workflows/CI.yml?query=branch%3Amaster)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://putianyi889.github.io/PTYQoL.jl/stable)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://putianyi889.github.io/PTYQoL.jl/dev)
 
 Want just an easy feature that Julia or some package doesn't have, while the PR gets rejected/takes forever to get merged? This is a personal collection of little things that makes coding easier while not breaking existing things.
 
