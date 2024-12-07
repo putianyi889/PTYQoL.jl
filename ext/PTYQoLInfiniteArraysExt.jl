@@ -1,8 +1,19 @@
 module PTYQoLInfiniteArraysExt
 
 # ambiguities
-import InfiniteArrays: RealInfinity, PosInfinity, ℵ₀, InfiniteCardinal
+import InfiniteArrays: RealInfinity, PosInfinity, ℵ₀, InfiniteCardinal, LazyLayout, MemoryLayout, UnknownLayout
 import Base: Colon, getindex, OverflowSafe, (:), getindex, OneTo, unitrange_last, _sub2ind_recurse
+import LazyArrays: islazy_layout
+
+MemoryLayout(a::CartesianIndices) = islazy_layout(typeof(a)) isa Val{true} ? LazyLayout() : UnknownLayout()
+@generated function islazy_layout(::Type{CartesianIndices{N,T}}) where {N,T}
+    for t in T.types
+        if islazy_layout(t) isa Val{true}
+            return Val(true)
+        end
+    end
+    return Val(false)
+end
 
 (:)(start::RealInfinity, step::AbstractFloat, stop::RealInfinity) = (:)(promote(start, step)..., stop)
 (:)(::PosInfinity, ::AbstractFloat, ::PosInfinity) = throw(ArgumentError("Cannot create range starting at infinity"))
