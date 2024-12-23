@@ -110,6 +110,15 @@ show(io::IO, f::ComposedFunction{<:Fix2}) = print(io, f.outer.f, '(', f.inner, '
 import Base: mapreduce
 mapreduce(f, op) = f()
 
+# https://github.com/JuliaLang/julia/pull/51475
+import Base: zero, TwicePrecision
+function zero(r::StepRangeLen{T,R,S}) where {T,R,S}
+    StepRangeLen{T}(zero(r.ref), zero(r.step), length(r), r.offset)
+end
+zero(r::LinRange) = LinRange{eltype(r)}(zero(first(r)), zero(last(r)), length(r))
+zero(r::Union{UnitRange, StepRange}) = zero(StepRangeLen(r))
+zero(r::TwicePrecision) = zero(typeof(r))
+
 import Base: searchsorted, searchsortedfirst, searchsortedlast, Ordering, Forward, ord, keytype, midpoint, lt
 
 function searchsortedfirst(v, x, lo::T, hi::T, o::Ordering)::keytype(v) where {T<:Integer}
@@ -174,7 +183,7 @@ end
 
 # https://github.com/JuliaLang/julia/pull/56433
 import Base: (:), +, -, TwicePrecision, zero, IEEEFloat
-zero(::TwicePrecision{T}) where {T} = TwicePrecision(zero(T))
+# zero(::TwicePrecision{T}) where {T} = TwicePrecision(zero(T)) # overwrites https://github.com/JuliaLang/julia/pull/51475
 TwicePrecision(x::AbstractIrrational) = TwicePrecision{Float64}(x)
 for op in (:+, :-)
     for (prec, twiceprec) in ((Float16, Float32), (Float32, Float64))
