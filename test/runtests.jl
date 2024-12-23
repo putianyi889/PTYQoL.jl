@@ -60,6 +60,34 @@ using Test
         @test length(1:π:-1) == 0
         @test length(1:π:1) == 1
     end
+
+    @testset "https://github.com/JuliaLang/julia/pull/51475" begin
+        @testset "StepRangeLen" begin
+            for r in (StepRangeLen(im, 2im, 10),
+                        StepRangeLen{Bool}(false, true, 2),
+                        1.0:2.0:5.0)
+                z = zero(r)
+                @test r + z == r
+                @test typeof(z) == typeof(r)
+            end
+        end
+        @testset "LinRange" begin
+            for r in (LinRange{Int}(2, 3, 2),
+                        LinRange(2, 3, 4),
+                        LinRange{Bool}(false, true, 2))
+                z = zero(r)
+                @test r + z == r
+                @test typeof(z) == typeof(r)
+            end
+        end
+        @testset "UnitRange/StepRange" begin
+            for r in (1:4, UnitRange(1.0, 2.0),
+                        1:1:4, false:true:true)
+                z = zero(r)
+                @test r + z == r
+            end
+        end
+    end
 end
 
 @testset "Misc" begin
