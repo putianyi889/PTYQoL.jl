@@ -51,7 +51,7 @@ Infinities = "0.1"
 IntervalSets = "0.7"
 IrrationalConstants = "0.2"
 LazyArrays = "2"
-QuasiArrays = "0.11"
+QuasiArrays = "0.11, 0.12"
 julia = "1"
 
 [extras]
