@@ -117,7 +117,6 @@ function zero(r::StepRangeLen{T,R,S}) where {T,R,S}
 end
 zero(r::LinRange) = LinRange{eltype(r)}(zero(first(r)), zero(last(r)), length(r))
 zero(r::Union{UnitRange, StepRange}) = zero(StepRangeLen(r))
-zero(r::TwicePrecision) = zero(typeof(r))
 
 import Base: searchsorted, searchsortedfirst, searchsortedlast, Ordering, Forward, ord, keytype, midpoint, lt
 
