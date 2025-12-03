@@ -1,7 +1,7 @@
 name = "PTYQoL"
 uuid = "551ad714-b11a-4605-8871-12721def4e72"
-authors = ["Tianyi Pu <912396513@qq.com> and contributors"]
 version = "0.3.3"
+authors = ["Tianyi Pu <912396513@qq.com> and contributors"]
 
 [weakdeps]
 AlgebraicNumbers = "e86d093a-a386-599e-b7c7-df0420c8bcba"
@@ -51,7 +51,7 @@ Infinities = "0.1"
 IntervalSets = "0.7"
 IrrationalConstants = "0.2"
 LazyArrays = "2"
-QuasiArrays = "0.11, 0.12"
+QuasiArrays = "0.11, 0.12, 0.13"
 julia = "1"
 
 [extras]
