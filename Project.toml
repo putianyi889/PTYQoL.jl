@@ -1,7 +1,7 @@
 name = "PTYQoL"
 uuid = "551ad714-b11a-4605-8871-12721def4e72"
-authors = ["Tianyi Pu <912396513@qq.com> and contributors"]
 version = "0.3.3"
+authors = ["Tianyi Pu <912396513@qq.com> and contributors"]
 
 [weakdeps]
 AlgebraicNumbers = "e86d093a-a386-599e-b7c7-df0420c8bcba"
@@ -44,7 +44,7 @@ BlockArrays = "1"
 BlockBandedMatrices = "0.13"
 CircularArrays = "1"
 ClassicalOrthogonalPolynomials = "0.13, 0.14, 0.15"
-ContinuumArrays = "0.18, 0.19"
+ContinuumArrays = "0.18, 0.19, 0.20"
 DomainSets = "0.7"
 InfiniteArrays = "0.14, 0.15"
 Infinities = "0.1"
