@@ -180,6 +180,16 @@ for s in [:searchsortedfirst, :searchsortedlast, :searchsorted]
     end
 end
 
+import Base: summary
+summary(x...) = summary(stdout, x...)
+function summary(io::IO, x...)
+    summary(io, x[1])
+    for t in tail(x)
+        print(io, ", ")
+        summary(io, t)
+    end
+end
+
 # https://github.com/JuliaLang/julia/pull/56433
 import Base: (:), +, -, TwicePrecision, zero, IEEEFloat
 # zero(::TwicePrecision{T}) where {T} = TwicePrecision(zero(T)) # overwrites https://github.com/JuliaLang/julia/pull/51475
