@@ -10,7 +10,7 @@ end
 
 # ambiguities
 import BlockArrays: BlockArray, to_axes, colsupport, rowsupport, BlockedArray, _blocked_reshape, BlockVector, AbstractBlockedUnitRange
-import Base: OneTo, similar, reshape, IdentityUnitRange, getindex
+import Base: OneTo, similar, reshape, IdentityUnitRange, getindex, Slice
 
 @inline similar(::BlockArray, ::Type{T}, axes::Tuple{Union{Integer, OneTo}, Vararg{Union{Integer, OneTo}}}) where T = BlockArray{T}(undef, map(to_axes,axes))
 @inline similar(::BlockArray, ::Type{T}, axes::Tuple{Integer, Vararg{Integer}}) where T = BlockArray{T}(undef, map(to_axes,axes))
@@ -32,5 +32,7 @@ function getindex(S::IdentityUnitRange, i::AbstractBlockedUnitRange{<:Integer})
     @boundscheck checkbounds(S, i)
     return convert(AbstractUnitRange{eltype(S)}, i)
 end
+
+getindex(S::Slice, i::AbstractBlockedUnitRange{<:Integer}) = (@inline; @boundscheck checkbounds(S, i); i)
 
 end # module
