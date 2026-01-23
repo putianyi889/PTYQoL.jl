@@ -27,5 +27,10 @@ function getindex(S::IdentityUnitRange, i::AbstractBlockedUnitRange{Bool})
     @boundscheck checkbounds(S, i)
     range(first(i) ? first(S) : last(S), length = last(i))
 end
+function getindex(S::IdentityUnitRange, i::AbstractBlockedUnitRange{<:Integer})
+    @inline
+    @boundscheck checkbounds(S, i)
+    return convert(AbstractUnitRange{eltype(S)}, i)
+end
 
 end # module
