@@ -235,4 +235,8 @@ function (:)(start::T, step::AbstractIrrational, stop::T) where {T<:AbstractFloa
     steprangelen_irrational(T, start, step, len, 1)
 end
 
+# https://github.com/JuliaLang/julia/issues/48745
+import Base: getindex
+getindex(g::Base.Generator{<:Base.Iterators.ProductIterator}, I...) = g.f(map(getindex, g.iter.iterators, I))
+
 end # module

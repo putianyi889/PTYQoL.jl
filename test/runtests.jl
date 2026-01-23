@@ -149,6 +149,10 @@ end
         @test searchsortedlast(v, 0.5) == searchsortedlast(t, 0.5)
     end
 
+    @testset "https://github.com/JuliaLang/julia/issues/48745" begin
+        g = (a + b for a in 1:3, b in 4:6)
+        @test collect(g) == [g[i,j] for i in 1:3, j in 1:3]
+    end
 
 end
 
