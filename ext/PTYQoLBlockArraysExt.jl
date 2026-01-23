@@ -9,8 +9,8 @@ function findblockindex(A::AbstractArray{T,N}, I::Tuple{Vararg{Integer,N}}) wher
 end
 
 # ambiguities
-import BlockArrays: BlockArray, to_axes, colsupport, rowsupport, BlockedArray, _blocked_reshape, BlockVector
-import Base: OneTo, similar, reshape
+import BlockArrays: BlockArray, to_axes, colsupport, rowsupport, BlockedArray, _blocked_reshape, BlockVector, AbstractBlockedUnitRange
+import Base: OneTo, similar, reshape, IdentityUnitRange, getindex
 
 @inline similar(::BlockArray, ::Type{T}, axes::Tuple{Union{Integer, OneTo}, Vararg{Union{Integer, OneTo}}}) where T = BlockArray{T}(undef, map(to_axes,axes))
 @inline similar(::BlockArray, ::Type{T}, axes::Tuple{Integer, Vararg{Integer}}) where T = BlockArray{T}(undef, map(to_axes,axes))
@@ -21,5 +21,11 @@ colsupport(A::BlockedArray, i::CartesianIndex{2}) = colsupport(A, last(i))
 reshape(block_array::BlockVector, dims::Tuple{Colon}) = reshape(BlockedArray(block_array), dims)
 reshape(block_array::BlockArray, dims::Tuple{Vararg{Int}}) = reshape(BlockedArray(block_array), dims)
 reshape(block_array::BlockArray, dims::Tuple{Integer, Vararg{Integer}}) = reshape(BlockedArray(block_array), dims)
+
+function getindex(S::IdentityUnitRange, i::AbstractBlockedUnitRange{Bool})
+    @inline
+    @boundscheck checkbounds(S, i)
+    range(first(i) ? first(S) : last(S), length = last(i))
+end
 
 end # module
