@@ -2,7 +2,7 @@ module PTYQoLInfiniteArraysExt
 
 # ambiguities
 import InfiniteArrays: RealInfinity, PosInfinity, ℵ₀, InfiniteCardinal, LazyLayout, MemoryLayout, UnknownLayout
-import Base: Colon, getindex, OverflowSafe, (:), getindex, OneTo, unitrange_last, _sub2ind_recurse
+import Base: Colon, getindex, OverflowSafe, (:), getindex, OneTo, unitrange_last, _sub2ind_recurse, IdentityUnitRange
 import LazyArrays: islazy_layout
 
 MemoryLayout(a::CartesianIndices) = islazy_layout(typeof(a)) isa Val{true} ? LazyLayout() : UnknownLayout()
@@ -28,6 +28,10 @@ function getindex(x::UnitRange{T}, y::InfiniteCardinal{0}) where T
     ℵ₀
 end
 function getindex(x::OneTo{T}, y::InfiniteCardinal{0}) where T
+    isinf(length(x)) || throw(BoundsError(x,y))
+    ℵ₀
+end
+function getindex(x::IdentityUnitRange, y::InfiniteCardinal{0})
     isinf(length(x)) || throw(BoundsError(x,y))
     ℵ₀
 end
